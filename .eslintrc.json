@@ -1,0 +1,7 @@
+{
+  "extends": "@saji/eslint-config",
+  "env": {
+    "node": true,
+    "browser": true
+  }
+}
