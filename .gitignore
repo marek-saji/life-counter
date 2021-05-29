@@ -30,3 +30,5 @@ Session.vim
 .DS_Store
 Thumbs.db
 Desktop.ini
+
+.vercel

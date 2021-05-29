@@ -1,17 +1,22 @@
 {
   "name": "@saji/life-counter",
-  "version": "1.0.0-pre",
+  "version": "1.0.0",
   "author": {
     "name": "Marek ‘saji’ Augustynowicz",
     "email": "marek.augustynowicz@verkstedt.com"
   },
+  "description": "Keep track on players’ life counts.",
+  "keywords": [
+    "counter",
+    "life",
+    "life-counter",
+    "spindown",
+    "magic-the-gathering"
+  ],
   "license": "ISC",
   "main": "index.js",
   "module": "index.js",
   "directories": {},
-  "engines": {
-    "node": "~12.16.0"
-  },
   "scripts": {
     "validate": "npm-run-all --parallel --print-name --aggregate-output test lint",
     "test": "echo 'No tests (yet)'",

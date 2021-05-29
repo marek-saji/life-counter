@@ -1,6 +1,9 @@
 @saji/life-counter
 ==================
 
+Keep track on players’ life counts.
+
+<https://life-counter.vercel.app>
 
 Code of conduct
 ---------------

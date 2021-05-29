@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="512"
+   height="512"
+   viewBox="0 0 512 512"
+   version="1.1"
+   inkscape:version="1.0.1 (3bc2e813f5, 2020-09-07)"
+   sodipodi:docname="icon-maskable.svg"
+   id="svg13">
+  <defs
+     id="defs2" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="1.6365655"
+     inkscape:cx="47.560175"
+     inkscape:cy="249.49053"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     units="px"
+     inkscape:window-width="2560"
+     inkscape:window-height="1403"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:pagecheckerboard="true"
+     showguides="true"
+     inkscape:guide-bbox="true"
+     inkscape:snap-bbox="true"
+     inkscape:bbox-paths="true"
+     inkscape:document-rotation="0">
+    <sodipodi:guide
+       position="51.222654,280.4654"
+       orientation="1,0"
+       id="guide816"
+       inkscape:locked="false" />
+    <sodipodi:guide
+       position="460.77735,265.80054"
+       orientation="1,0"
+       id="guide822"
+       inkscape:locked="false" />
+    <sodipodi:guide
+       position="256,460.77345"
+       orientation="0,1"
+       id="guide824"
+       inkscape:locked="false" />
+    <sodipodi:guide
+       position="265.18951,51.21876"
+       orientation="0,1"
+       id="guide826"
+       inkscape:locked="false" />
+  </sodipodi:namedview>
+  <metadata
+     id="metadata5">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+        <cc:license
+           rdf:resource="http://creativecommons.org/licenses/by-nc-sa/4.0/" />
+        <dc:creator>
+          <cc:Agent>
+            <dc:title>Marek ‘saji’ Augustynowicz</dc:title>
+          </cc:Agent>
+        </dc:creator>
+      </cc:Work>
+      <cc:License
+         rdf:about="http://creativecommons.org/licenses/by-nc-sa/4.0/">
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#Reproduction" />
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#Distribution" />
+        <cc:requires
+           rdf:resource="http://creativecommons.org/ns#Notice" />
+        <cc:requires
+           rdf:resource="http://creativecommons.org/ns#Attribution" />
+        <cc:prohibits
+           rdf:resource="http://creativecommons.org/ns#CommercialUse" />
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#DerivativeWorks" />
+        <cc:requires
+           rdf:resource="http://creativecommons.org/ns#ShareAlike" />
+      </cc:License>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(0,-161.53336)">
+    <path
+       style="opacity:0.1;fill:#ff00ff;fill-opacity:1;stroke:none;stroke-width:9.94133091;stroke-miterlimit:4;stroke-dasharray:none;paint-order:markers stroke fill"
+       d="M 0 0 L 0 512 L 512 512 L 512 0 L 0 0 z M 256 51.226562 A 204.77729 204.77729 0 0 1 460.77734 256.00391 A 204.77729 204.77729 0 0 1 256 460.78125 A 204.77729 204.77729 0 0 1 51.222656 256.00391 A 204.77729 204.77729 0 0 1 256 51.226562 z "
+       transform="translate(0,161.53336)"
+       id="path822" />
+    <g
+       id="g898"
+       transform="matrix(0.77877966,0,0,0.77877966,46.732558,92.993739)">
+      <path
+         id="path840"
+         style="fill:#ffffff;fill-opacity:0.999401;stroke:#000000;stroke-width:20;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;paint-order:markers fill stroke"
+         d="M 178.62393,210.71679 27.551657,405.66992 127.25283,623.8789 388.65322,623.12109 490.76846,419.29296 420.20791,217.60547 Z" />
+      <g
+         id="g889">
+        <path
+           style="fill:none;fill-opacity:0.761063;stroke:#000000;stroke-width:20;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;paint-order:markers stroke fill"
+           d="M 178.62393,210.71679 126.914,436.05202 27.552017,405.67082"
+           id="path844" />
+        <path
+           style="fill:none;fill-opacity:0.761063;stroke:#000000;stroke-width:20;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;paint-order:markers stroke fill"
+           d="M 127.25283,623.8789 126.914,436.05202 348.10862,568.13178 Z"
+           id="path846" />
+        <path
+           style="fill:none;fill-opacity:0.761063;stroke:#000000;stroke-width:20;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;paint-order:markers stroke fill"
+           d="M 388.65322,623.12109 348.10862,568.13178 490.76846,419.29296 371.56434,290.25026 420.20742,217.60485"
+           id="path848" />
+        <path
+           style="fill:none;fill-opacity:0.761063;stroke:#000000;stroke-width:20;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;paint-order:markers stroke fill"
+           d="M 178.62393,210.71679 371.56434,290.25026 126.914,436.05202"
+           id="path850" />
+        <path
+           style="fill:none;fill-opacity:0.761063;stroke:#000000;stroke-width:20;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;paint-order:markers stroke fill"
+           d="M 371.56434,290.25026 348.10862,568.13178"
+           id="path852" />
+      </g>
+    </g>
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer2"
+     inkscape:label="Mask boundary" />
+</svg>
