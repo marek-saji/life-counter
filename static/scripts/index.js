@@ -9,6 +9,11 @@ function handleStepperClick (event)
     const player = players.get(playerElement.dataset.player)
     const step = parseInt(stepper.dataset.step)
 
+    player.playerElement.dataset.buttonFocusWithin = 'true';
+    stepper.addEventListener('blur', () => {
+        player.playerElement.dataset.buttonFocusWithin = 'false';
+    }, { once: true });
+
     player.lifeInput.valueAsNumber += step;
 
     const change = parseInt(player.messageElement.dataset.change || 0) + step;

@@ -50,6 +50,15 @@ body
     margin: 0;
 }
 
+@media (prefers-reduced-motion)
+{
+    *
+    {
+        transition: none !important;
+        animation: none !important;
+    }
+}
+
 /* template: App */
 
 .t-App
@@ -84,10 +93,12 @@ body
     flex-direction: column;
     justify-content: center;
     position: relative;
+    transition: transform ease-in 200ms;
     outline: var(--colour-section-separator) solid 1px;
 }
 
-.o-Player--opponent
+.o-Player--opponent:not(:focus-within),
+.o-Player--opponent[data-button-focus-within=true]
 {
     transform: rotate(180deg);
 }
