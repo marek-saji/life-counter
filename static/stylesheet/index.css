@@ -93,12 +93,17 @@ body
     flex-direction: column;
     justify-content: center;
     position: relative;
-    transition: transform ease-in 200ms;
     outline: var(--colour-section-separator) solid 1px;
+    overflow: hidden;
 }
 
-.o-Player--opponent:not(:focus-within),
-.o-Player--opponent[data-button-focus-within=true]
+.o-Player__content
+{
+    transition: transform ease-in 200ms;
+}
+
+.o-Player--opponent:not(:focus-within) > .o-Player__content,
+.o-Player--opponent[data-button-focus-within=true] > .o-Player__content
 {
     transform: rotate(180deg);
 }

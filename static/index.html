@@ -24,64 +24,68 @@
         </header>
 
         <section data-player=2 class="t-App__panel o-Player o-Player--opponent o-Player--red">
-            <h2 class="o-Player__name" data-component=name>
-                <input class="o-Player__nameInput" value="Opponent" />
-            </h2>
+            <div class="o-Player__content">
+                <h2 class="o-Player__name" data-component=name>
+                    <input class="o-Player__nameInput" value="Opponent" />
+                </h2>
 
-            <div class="o-Player__message" data-component=message hidden aria-life="polite">
-            </div>
+                <div class="o-Player__message" data-component=message hidden aria-life="polite">
+                </div>
 
-            <div class="m-Life">
-                <input class="m-Life__value" data-component=life type="number" value=20 step=1 />
-                <button
-                    hidden
-                    class="m-Life__button m-Life__button--decrease"
-                    type="button"
-                    data-step="-1"
-                    aria-label="Decreate life by one"
-                >
-                    -
-                </button>
-                <button
-                    hidden
-                    class="m-Life__button m-Life__button--increase"
-                    type="button"
-                    data-step="+1"
-                    aria-label="Increase life by one"
-                >
-                    +
-                </button>
+                <div class="m-Life">
+                    <input class="m-Life__value" data-component=life type="number" value=20 step=1 />
+                    <button
+                        hidden
+                        class="m-Life__button m-Life__button--decrease"
+                        type="button"
+                        data-step="-1"
+                        aria-label="Decreate life by one"
+                    >
+                        -
+                    </button>
+                    <button
+                        hidden
+                        class="m-Life__button m-Life__button--increase"
+                        type="button"
+                        data-step="+1"
+                        aria-label="Increase life by one"
+                    >
+                        +
+                    </button>
+                </div>
             </div>
         </section>
 
         <section data-player=1 class="t-App__panel o-Player o-Player--black">
-            <h2 class="o-Player__name" data-component=name>
-                <input class="o-Player__nameInput" value="Me" />
-            </h2>
+            <div class="o-Player__content">
+                <h2 class="o-Player__name" data-component=name>
+                    <input class="o-Player__nameInput" value="Me" />
+                </h2>
 
-            <div class="o-Player__message" data-component=message hidden aria-life="polite">
-            </div>
+                <div class="o-Player__message" data-component=message hidden aria-life="polite">
+                </div>
 
-            <div class="m-Life">
-                <input class="m-Life__value" data-component=life type="number" value=20 step=1 />
-                <button
-                    hidden
-                    class="m-Life__button m-Life__button--decrease"
-                    type="button"
-                    data-step="-1"
-                    aria-label="Decreate life by one"
-                >
-                    -
-                </button>
-                <button
-                    hidden
-                    class="m-Life__button m-Life__button--increase"
-                    type="button"
-                    data-step="+1"
-                    aria-label="Increase life by one"
-                >
-                    +
-                </button>
+                <div class="m-Life">
+                    <input class="m-Life__value" data-component=life type="number" value=20 step=1 />
+                    <button
+                        hidden
+                        class="m-Life__button m-Life__button--decrease"
+                        type="button"
+                        data-step="-1"
+                        aria-label="Decreate life by one"
+                    >
+                        -
+                    </button>
+                    <button
+                        hidden
+                        class="m-Life__button m-Life__button--increase"
+                        type="button"
+                        data-step="+1"
+                        aria-label="Increase life by one"
+                    >
+                        +
+                    </button>
+                </div>
             </div>
         </section>
     </form>

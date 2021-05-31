@@ -9,6 +9,7 @@ function handleStepperClick (event)
     const player = players.get(playerElement.dataset.player)
     const step = parseInt(stepper.dataset.step)
 
+    // FIXME Misbehaves on non–touch
     player.playerElement.dataset.buttonFocusWithin = 'true';
     stepper.addEventListener('blur', () => {
         player.playerElement.dataset.buttonFocusWithin = 'false';
