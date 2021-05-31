@@ -228,6 +228,14 @@ body
     border: none;
     background-color: transparent;
     color: inherit;
+    -moz-appearance: textfield;
+}
+
+.m-Life__value::-webkit-outer-spin-button,
+.m-Life__value::-webkit-inner-spin-button
+{
+    -webkit-appearance: none;
+    margin: 0;
 }
 
 @media (min-aspect-ratio: 2/5)
