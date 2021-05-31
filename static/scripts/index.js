@@ -1,5 +1,6 @@
 const players = new Map()
 
+const STARTING_LIFE = 20;
 const MESSAGE_HANG_TIME_MS = 2000; // FIXME Hang longer for accessibility?
 
 function handleStepperClick (event)
@@ -68,9 +69,11 @@ async function main ()
         stepper.hidden = false;
     })
 
-    document.querySelector('button[type=reset]').addEventListener('click', () => {
+    document.querySelector('button[type=reset]').addEventListener('click', (event) => {
+        event.preventDefault();
+
         players.forEach(player => {
-            player.lifeInput.valueAsNumber = 0;
+            player.lifeInput.valueAsNumber = STARTING_LIFE;
             player.messageElement.hidden = true;
             clearTimeout(player.lifeInput.messageTimeoutId);
         });
