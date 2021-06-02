@@ -11,12 +11,6 @@ function handleStepperClick (event)
     const player = players.get(playerElement.dataset.player);
     const step = parseInt(stepper.dataset.step, 10);
 
-    // FIXME Misbehaves on non–touch
-    player.playerElement.dataset.buttonFocusWithin = 'true';
-    stepper.addEventListener('blur', () => {
-        player.playerElement.dataset.buttonFocusWithin = 'false';
-    }, { once: true });
-
     player.lifeInput.valueAsNumber += step;
 
     const change =
@@ -36,6 +30,17 @@ function handleStepperClick (event)
         },
         MESSAGE_HANG_TIME_MS,
     );
+}
+
+function handleStepperFocus (event)
+{
+    const stepper = event.target;
+    const playerElement = stepper.closest('[data-player]');
+
+    playerElement.dataset.buttonFocusWithin = 'true';
+    stepper.addEventListener('blur', () => {
+        delete playerElement.dataset.buttonFocusWithin;
+    }, { once: true });
 }
 
 function drawPlayer ()
@@ -70,6 +75,7 @@ async function main ()
         };
         players.set(playerElement.dataset.player, data);
 
+        stepper.addEventListener('focus', handleStepperFocus);
         stepper.addEventListener('click', handleStepperClick);
         // eslint-disable-next-line no-param-reassign
         stepper.hidden = false;
