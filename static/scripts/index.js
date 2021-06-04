@@ -6,7 +6,7 @@ const MESSAGE_HANG_TIME_MS = 2000;
 
 function handleStepperClick (event)
 {
-    const stepper = event.target;
+    const stepper = event.currentTarget;
     const playerElement = stepper.closest('[data-player]');
     const player = players.get(playerElement.dataset.player);
     const step = parseInt(stepper.dataset.step, 10);
@@ -34,7 +34,7 @@ function handleStepperClick (event)
 
 function handleStepperFocus (event)
 {
-    const stepper = event.target;
+    const stepper = event.currentTarget;
     const playerElement = stepper.closest('[data-player]');
 
     playerElement.dataset.buttonFocusWithin = 'true';
