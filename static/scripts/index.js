@@ -56,9 +56,18 @@ function drawPlayer ()
     }, 500);
 }
 
+async function requestScreenLock ()
+{
+    if (document.visibilityState === 'visible')
+    {
+        await navigator.wakeLock.request('screen');
+    }
+}
+
 async function main ()
 {
-    await navigator.wakeLock.request('screen');
+    requestScreenLock();
+    document.addEventListener('visibilitychange', requestScreenLock);
 
     if (window.location.hostname !== 'localhost' && !window.location.hostname.endsWith('.loca.lt'))
     {
