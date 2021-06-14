@@ -1,10 +1,13 @@
 :root
 {
+    /* color */
+
     --colour-dark-bg: #222;
     --colour-dark-fg: #222;
     --colour-light-bg: #eee;
     --colour-light-fg: #eee;
 
+    /* accent colours */
     --colour-red-bg: #622;
     --colour-green-bg: #252;
     --colour-blue-bg: #57e;
@@ -12,11 +15,14 @@
     --colour-black-bg: #333;
     --colour-grey-bg: #777;
 
+    /* functional colours */
+
     /* Don’t forget to upgrade theme-color meta tag and manifest as well */
     --colour-bg: var(--colour-dark-bg);
     --colour-fg: var(--colour-light-fg);
-
     --colour-section-separator: black;
+
+    /* sizes */
 
     --action-button-size: 1.5em;
 }
