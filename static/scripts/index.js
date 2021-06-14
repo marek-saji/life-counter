@@ -4,6 +4,71 @@ const STARTING_LIFE = 20;
 // FIXME Hang longer for accessibility?
 const MESSAGE_HANG_TIME_MS = 2000;
 
+async function serialiseGame ()
+{
+    return Array.from(players.entries())
+        .map(([id, data]) => ({
+            id,
+            name: data.nameInput.value,
+            life: data.lifeInput.valueAsNumber,
+        }));
+}
+
+async function deserialiseGame (state)
+{
+    state.forEach((item) => {
+        const player = players.get(item.id);
+        player.nameInput.value = item.name;
+        player.lifeInput.value = item.life;
+    });
+}
+
+async function getItem (name, fallback = null)
+{
+    const jsonValue = localStorage.getItem(name);
+    if (jsonValue !== null)
+    {
+        try
+        {
+            return JSON.parse(jsonValue);
+        }
+        catch (error)
+        {
+            // Ignore errors
+        }
+    }
+    return fallback;
+}
+
+async function setItem (name, value)
+{
+    const jsonValue = JSON.stringify(value);
+    localStorage.setItem(name, jsonValue);
+}
+
+async function saveCurrentGame ()
+{
+    const state = await serialiseGame();
+    await setItem('current', state);
+}
+
+async function restoreCurrentGame ()
+{
+    const state = await getItem('current');
+    if (state)
+    {
+        deserialiseGame(state);
+    }
+}
+
+async function pushGame ()
+{
+    const state = await serialiseGame();
+    const history = await getItem('history', []);
+    history.push(state);
+    setItem('history', history);
+}
+
 function handleStepperClick (event)
 {
     const stepper = event.currentTarget;
@@ -30,6 +95,8 @@ function handleStepperClick (event)
         },
         MESSAGE_HANG_TIME_MS,
     );
+
+    saveCurrentGame();
 }
 
 function handleStepperFocus (event)
@@ -78,7 +145,8 @@ async function main ()
         const playerElement = stepper.closest('[data-player]');
         const data = {
             playerElement,
-            lifeInput: playerElement.querySelector('[data-component=life]'),
+            lifeInput: playerElement.querySelector('input[data-component=life]'),
+            nameInput: playerElement.querySelector('[data-component=name] input'),
             messageElement: playerElement.querySelector('[data-component=message]'),
             messageTimeoutId: null,
         };
@@ -90,8 +158,17 @@ async function main ()
         stepper.hidden = false;
     });
 
-    document.querySelector('button[type=reset]').addEventListener('click', (event) => {
+    restoreCurrentGame();
+
+    document.querySelector('button[type=reset]').addEventListener('click', async (event) => {
         event.preventDefault();
+
+        const somePlayerDead = Array.from(players.values())
+            .some((player) => player.lifeInput.valueAsNumber <= 0);
+        if (somePlayerDead)
+        {
+            await pushGame();
+        }
 
         players.forEach((player) => {
             // eslint-disable-next-line no-param-reassign
@@ -101,6 +178,8 @@ async function main ()
             clearTimeout(player.lifeInput.messageTimeoutId);
         });
         drawPlayer();
+
+        saveCurrentGame();
     });
 
     // TODO Click player name to edit it, but also change bg colour
