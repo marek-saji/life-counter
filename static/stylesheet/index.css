@@ -24,12 +24,12 @@
 html
 {
     box-sizing: border-box;
-    font-family: serif;
-    background-color: var(--colour-bg);
-    color: var(--colour-fg);
     height: 100%;
+    color: var(--colour-fg);
     font-size: 5vh; /* FIXME In general adapt to weird aspect ratios better */
+    font-family: serif;
     text-align: center;
+    background-color: var(--colour-bg);
 }
 
 *,
@@ -37,10 +37,10 @@ html
 *::after
 {
     box-sizing: inherit;
+    color: inherit;
     font: inherit;
     text-align: inherit;
     background-color: transparent;
-    color: inherit;
     border: none;
 }
 
@@ -63,21 +63,21 @@ body
 
 .t-App
 {
-    height: 100%;
-    width: 100%;
     display: grid;
     grid-template:
         "a1 a2"
         "toolbox toolbox" 0
         "b1 b2";
     align-items: stretch;
+    width: 100%;
+    height: 100%;
 }
 
 .t-App__toolbox
 {
+    z-index: 2;
     grid-area: toolbox;
     margin-block-start: calc(var(--action-button-size) / -2);
-    z-index: 2;
 }
 
 .t-App__panel
@@ -89,12 +89,12 @@ body
 
 .o-Player
 {
+    position: relative;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    position: relative;
-    outline: var(--colour-section-separator) solid 1px;
     overflow: hidden;
+    outline: var(--colour-section-separator) solid 1px;
 }
 
 .o-Player__content
@@ -110,38 +110,38 @@ body
 
 .o-Player--red
 {
-    background-color: var(--colour-red-bg);
     color: var(--colour-light-fg);
+    background-color: var(--colour-red-bg);
 }
 
 .o-Player--green
 {
-    background-color: var(--colour-green-bg);
     color: var(--colour-light-fg);
+    background-color: var(--colour-green-bg);
 }
 
 .o-Player--blue
 {
-    background-color: var(--colour-blue-bg);
     color: var(--colour-light-fg);
+    background-color: var(--colour-blue-bg);
 }
 
 .o-Player--white
 {
-    background-color: var(--colour-white-bg);
     color: var(--colour-dark-fg);
+    background-color: var(--colour-white-bg);
 }
 
 .o-Player--black
 {
-    background-color: var(--colour-black-bg);
     color: var(--colour-light-fg);
+    background-color: var(--colour-black-bg);
 }
 
 .o-Player--grey
 {
-    background-color: var(--colour-grey-bg);
     color: var(--colour-light-fg);
+    background-color: var(--colour-grey-bg);
 }
 
 .o-Player__name
@@ -157,27 +157,26 @@ body
 
 .o-Player__message
 {
-    background-color: rgba(0, 0, 0, 0.7);
     position: absolute;
     top: 0.5em;
     left: 50%;
-    transform: translateX(-50%);
     max-width: 100%;
     padding: 0.5em;
+    font-weight: bold;
+    font-family: sans-serif;
+    background-color: rgba(0, 0, 0, 0.7);
+    border-radius: 0.5em;
+    transform: translateX(-50%);
     transition:
         opacity ease-out 200ms,
         transform ease-in 200ms;
     pointer-events: none;
-    border-radius: 0.5em;
-    font-weight: bold;
-    font-family: sans-serif;
 }
 
 .o-Player__message[data-incoming=true]
 {
-    transition:
-        opacity ease-out 200ms;
     transform: translateX(-50%) translateY(0.25em);
+    transition: opacity ease-out 200ms;
 }
 
 .o-Player__message[hidden]
@@ -198,8 +197,8 @@ body
 {
     display: flex;
     flex-direction: column-reverse;
-    justify-content: center;
     align-items: center;
+    justify-content: center;
     font-size: 2.7em;
 }
 
@@ -220,39 +219,39 @@ body
     --size: 1.5ch;
 
     display: block;
-    font-size: 0.7em;
     width: var(--size);
     height: var(--size);
+    font-size: 0.7em;
+    line-height: 0.5; /* FIXME font–specific. Probably need to go with icons. */
     border: currentColor solid;
     border-radius: 50%;
-    line-height: 0.5; /* FIXME font–specific. Probably need to go with icons. */
 }
 
 .m-Life__value
 {
-    width: 3ch;
     flex: 0 1 auto;
+    width: 3ch;
+    color: inherit;
     font: inherit;
     text-align: center;
-    border: none;
     background-color: transparent;
-    color: inherit;
+    border: none;
     -moz-appearance: textfield;
 }
 
 .m-Life__value::-webkit-outer-spin-button,
 .m-Life__value::-webkit-inner-spin-button
 {
-    -webkit-appearance: none;
     margin: 0;
+    -webkit-appearance: none;
 }
 
 @media (min-aspect-ratio: 2/5)
 {
     .m-Life
     {
-        flex-wrap: wrap;
         flex-direction: row;
+        flex-wrap: wrap;
     }
 }
 
@@ -260,12 +259,12 @@ body
 
 .a-Action
 {
-    background-color: black;
-    border-radius: 50%;
     width: var(--action-button-size);
     height: var(--action-button-size);
     line-height: 1;
+    background-color: black;
+    border-radius: 50%;
     box-shadow:
-        0 0.5em 1.5em rgba(0,0,0,0.19),
-        0 0.25em 0.25em rgba(0,0,0,0.23);
+        0 0.5em 1.5em rgba(0, 0, 0, 0.19),
+        0 0.25em 0.25em rgba(0, 0, 0, 0.23);
 }
