@@ -207,13 +207,22 @@ body
     justify-content: center;
     align-items: center;
     font-size: 2.7em;
+    padding-inline: 0.1em;
 }
 
 .m-Life__button
 {
+    --size: 1.5ch;
+
+    font-size: 0.7em;
+    width: var(--size);
+    height: var(--size);
     flex: 0 0 auto;
-    padding-inline: 0.25em;
-    padding-block: 0.5em;
+    border: currentColor solid;
+    border-radius: 50%;
+    line-height: 0.5; /* FIXME font–specific. Probably need to go with icons. */
+    display: inline-block;
+    vertical-align: middle;
 }
 
 .m-Life__button--decrease
@@ -221,22 +230,9 @@ body
     order: -1;
 }
 
-.m-Life__buttonIcon
-{
-    --size: 1.5ch;
-
-    display: block;
-    font-size: 0.7em;
-    width: var(--size);
-    height: var(--size);
-    border: currentColor solid;
-    border-radius: 50%;
-    line-height: 0.5; /* FIXME font–specific. Probably need to go with icons. */
-}
-
 .m-Life__value
 {
-    width: 3ch;
+    width: 3.5ch;
     flex: 0 1 auto;
     font: inherit;
     text-align: center;

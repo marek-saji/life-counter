@@ -71,7 +71,7 @@ async function pushGame ()
 
 function handleStepperClick (event)
 {
-    const stepper = event.currentTarget;
+    const stepper = event.target;
     const playerElement = stepper.closest('[data-player]');
     const player = players.get(playerElement.dataset.player);
     const step = parseInt(stepper.dataset.step, 10);
@@ -101,7 +101,7 @@ function handleStepperClick (event)
 
 function handleStepperFocus (event)
 {
-    const stepper = event.currentTarget;
+    const stepper = event.target;
     const playerElement = stepper.closest('[data-player]');
 
     playerElement.dataset.buttonFocusWithin = 'true';
