@@ -73,6 +73,12 @@ async function pushGame ()
     setItem('history', history);
 }
 
+function forceRepaint (element)
+{
+    // eslint-disable-next-line no-unused-expressions
+    element.offsetHeight;
+}
+
 function handleStepperClick (event)
 {
     const stepper = event.target;
@@ -88,8 +94,7 @@ function handleStepperClick (event)
     player.messageElement.hidden = false;
     player.messageElement.textContent = change > 0 ? `+${change}` : change;
     player.messageElement.dataset.incoming = 'true';
-    // eslint-disable-next-line no-unused-expressions
-    player.messageElement.offsetHeight;
+    forceRepaint(player.messageElement);
     player.messageElement.dataset.incoming = 'false';
     clearTimeout(player.messageTimeoutId);
     player.messageTimeoutId = setTimeout(
