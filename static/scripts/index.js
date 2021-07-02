@@ -6,17 +6,21 @@ const MESSAGE_HANG_TIME_MS = 2000;
 
 async function serialiseGame ()
 {
-    return Array.from(players.entries())
-        .map(([id, data]) => ({
-            id,
-            name: data.nameInput.value,
-            life: data.lifeInput.valueAsNumber,
-        }));
+    return {
+        date: (new Date()).toISOString(),
+        players: Array.from(players.entries())
+            .map(([id, data]) => ({
+                id,
+                name: data.nameInput.value,
+                life: data.lifeInput.valueAsNumber,
+            })),
+    };
 }
 
 async function deserialiseGame (state)
 {
-    state.forEach((item) => {
+    const playersState = Array.isArray(state) ? state : state.players;
+    playersState.forEach((item) => {
         const player = players.get(item.id);
         player.nameInput.value = item.name;
         player.lifeInput.value = item.life;
