@@ -11,8 +11,8 @@ async function serialiseGame ()
         players: Array.from(players.entries())
             .map(([id, data]) => ({
                 id,
-                name: data.nameInput.value,
-                life: data.lifeInput.valueAsNumber,
+                name: data.name,
+                life: data.life,
             })),
     };
 }
@@ -22,8 +22,11 @@ async function deserialiseGame (state)
     const playersState = Array.isArray(state) ? state : state.players;
     playersState.forEach((item) => {
         const player = players.get(item.id);
-        player.nameInput.value = item.name;
-        player.lifeInput.value = item.life;
+        player.name = item.name;
+        player.life = item.life;
+
+        player.nameElement.textContent = player.name;
+        player.lifeElement.textContent = player.life;
     });
 }
 
@@ -86,7 +89,8 @@ function handleStepperClick (event)
     const player = players.get(playerElement.dataset.player);
     const step = parseInt(stepper.dataset.step, 10);
 
-    player.lifeInput.valueAsNumber += step;
+    player.life += step;
+    player.lifeElement.textContent = player.life;
 
     const change =
         parseInt(player.messageElement.dataset.change || 0, 10) + step;
@@ -119,6 +123,19 @@ function handleStepperFocus (event)
     }, { once: true });
 }
 
+function resetPlayers ()
+{
+    players.forEach((player) => {
+        /* eslint-disable no-param-reassign */
+        player.life = STARTING_LIFE;
+        player.lifeElement.textContent = player.life;
+        player.name = player.nameElement.textContent;
+        player.messageElement.hidden = true;
+        clearTimeout(player.messageTimeoutId);
+        /* eslint-enable no-param-reassign */
+    });
+}
+
 function drawPlayer ()
 {
     const playerIds = Array.from(players.keys());
@@ -134,6 +151,7 @@ function drawPlayer ()
 
 async function requestScreenLock ()
 {
+    // TODO Polyfill for wekeLock
     if (document.visibilityState === 'visible')
     {
         await navigator.wakeLock.request('screen');
@@ -150,21 +168,27 @@ async function main ()
         navigator.serviceWorker.register('./serviceWorker.js');
     }
 
-    document.querySelectorAll('button[data-step]').forEach((stepper) => {
-        const playerElement = stepper.closest('[data-player]');
+    document.querySelectorAll('[data-player]').forEach((playerElement) => {
+        const lifeElement = playerElement.querySelector('[data-component=life]');
+        const nameElement = playerElement.querySelector('[data-component=name]');
+        const messageElement = playerElement.querySelector('[data-component=message]');
         const data = {
             playerElement,
-            lifeInput: playerElement.querySelector('input[data-component=life]'),
-            nameInput: playerElement.querySelector('[data-component=name] input'),
-            messageElement: playerElement.querySelector('[data-component=message]'),
+            life: STARTING_LIFE,
+            name: nameElement.textContent,
+            lifeElement,
+            nameElement,
+            messageElement,
             messageTimeoutId: null,
         };
         players.set(playerElement.dataset.player, data);
 
-        stepper.addEventListener('focus', handleStepperFocus);
-        stepper.addEventListener('click', handleStepperClick);
-        // eslint-disable-next-line no-param-reassign
-        stepper.hidden = false;
+        playerElement.querySelectorAll('[data-step]').forEach((stepper) => {
+            stepper.addEventListener('focus', handleStepperFocus);
+            stepper.addEventListener('click', handleStepperClick);
+            // eslint-disable-next-line no-param-reassign
+            stepper.hidden = false;
+        });
     });
 
     restoreCurrentGame();
@@ -173,19 +197,13 @@ async function main ()
         event.preventDefault();
 
         const somePlayerDead = Array.from(players.values())
-            .some((player) => player.lifeInput.valueAsNumber <= 0);
+            .some((player) => player.life <= 0);
         if (somePlayerDead)
         {
             await pushGame();
         }
 
-        players.forEach((player) => {
-            // eslint-disable-next-line no-param-reassign
-            player.lifeInput.valueAsNumber = STARTING_LIFE;
-            // eslint-disable-next-line no-param-reassign
-            player.messageElement.hidden = true;
-            clearTimeout(player.lifeInput.messageTimeoutId);
-        });
+        resetPlayers();
         drawPlayer();
 
         saveCurrentGame();

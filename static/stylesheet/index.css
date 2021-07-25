@@ -150,13 +150,13 @@ body
     background-color: var(--colour-grey-bg);
 }
 
-.o-Player__name
+.o-Player__nameHeading
 {
     margin: 0;
     transition: transform ease-in-out 200ms;
 }
 
-.o-Player[data-chosen=true] .o-Player__name
+.o-Player[data-chosen=true] .o-Player__nameHeading
 {
     transform: scale(2); /* FIXME Maybe o-Player background animation instead? */
 }
@@ -191,7 +191,7 @@ body
     opacity: 0;
 }
 
-.o-Player__nameInput
+.o-Player__name
 {
     width: 100vw;
     border: 0;
