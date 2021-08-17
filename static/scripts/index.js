@@ -27,6 +27,7 @@ async function deserialiseGame (state)
 
         player.nameElement.textContent = player.name;
         player.lifeElement.textContent = player.life;
+        player.playerElement.dataset.dead = player.life <= 0;
     });
 }
 
@@ -91,6 +92,8 @@ function handleStepperClick (event)
 
     player.life += step;
     player.lifeElement.textContent = player.life;
+
+    playerElement.dataset.dead = player.life <= 0;
 
     const change =
         parseInt(player.messageElement.dataset.change || 0, 10) + step;

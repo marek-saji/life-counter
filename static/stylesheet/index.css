@@ -160,6 +160,7 @@ body
     z-index: 1;
     display: inline-block;
     margin: 0;
+    padding-block: 0.25em;
     overflow: hidden;
     transition: transform ease-in-out 200ms;
 }
@@ -169,9 +170,31 @@ body
     transform: scale(2); /* FIXME Maybe o-Player background animation instead? */
 }
 
+.o-Player__nameHeading::before,
+.o-Player__nameHeading::after
+{
+    display: inline-block;
+    content: '💀';
+}
+
+.o-Player__nameHeading::before
+{
+    visibility: hidden;
+}
+
+.o-Player__nameHeading::after
+{
+    transform: translateY(-3em);
+    transition: transform cubic-bezier(1, 0.75, 0.9, 1.2) 500ms; /* TODO Better animation */
+}
+
+[data-dead=true] .o-Player__nameHeading::after
+{
+    transform: translateY(0);
+}
+
 .o-Player__name
 {
-    width: 100vw;
     border: 0;
 }
 
