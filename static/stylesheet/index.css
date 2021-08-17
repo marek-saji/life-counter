@@ -193,6 +193,8 @@ body
 
 .o-Player__name
 {
+    position: relative;
+    z-index: 1;
     width: 100vw;
     border: 0;
 }
@@ -201,6 +203,9 @@ body
 
 .m-Life
 {
+    --value-width: 3.5ch;
+    --button-size: 1.5ch;
+
     display: flex;
     flex-direction: column-reverse;
     align-items: center;
@@ -211,17 +216,31 @@ body
 
 .m-Life__button
 {
-    --size: 1.5ch;
+    --scale: 0.7;
 
+    position: relative;
     display: inline-block;
     flex: 0 0 auto;
-    width: var(--size);
-    height: var(--size);
-    font-size: 0.7em;
+    width: var(--button-size);
+    height: var(--button-size);
+    font-size: calc(var(--scale) * 1em);
     line-height: 0.5; /* FIXME font–specific. Probably need to go with icons. */
     vertical-align: middle;
     border: currentColor solid;
     border-radius: 50%;
+}
+
+.m-Life__button::before
+{
+    --height: calc(var(--button-size) + 1em / var(--scale));
+    --width: calc(var(--button-size) + var(--value-width));
+
+    position: absolute;
+    top: calc(50% - var(--height) / 2);
+    left: calc(50% - var(--width) / 2);
+    width: var(--width);
+    height: var(--height);
+    content: '';
 }
 
 .m-Life__button--decrease
@@ -232,7 +251,7 @@ body
 .m-Life__value
 {
     flex: 0 1 auto;
-    width: 3.5ch;
+    width: var(--value-width);
     color: inherit;
     font: inherit;
     text-align: center;
