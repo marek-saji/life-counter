@@ -95,11 +95,28 @@ body
 
 .o-Player
 {
+    --gradient-width: 100%;
+    --colour-a: red;
+    --colour-b: var(--colour-a);
+    --shadow-colour: transparent;
+
     position: relative;
     display: flex;
     flex-direction: column;
     justify-content: center;
     overflow: hidden;
+    color: var(--colour-light-fg);
+    text-shadow: 0 0 0.25ch var(--shadow-colour);
+    background:
+        linear-gradient(
+            to left,
+            var(--colour-a),
+            calc(50% - var(--gradient-width) / 2),
+            var(--colour-a),
+            var(--colour-b),
+            calc(50% + var(--gradient-width) / 2),
+            var(--colour-b)
+        );
     outline: var(--colour-section-separator) solid 1px;
 }
 
@@ -113,41 +130,29 @@ body
     transform: rotate(180deg);
 }
 
-.o-Player--red
+.o-Player--red { --colour-a: var(--colour-red-bg); }
+.o-Player--secondaryRed { --colour-b: var(--colour-red-bg); }
+
+.o-Player--green { --colour-a: var(--colour-green-bg); }
+.o-Player--secondaryGreen { --colour-b: var(--colour-green-bg); }
+
+.o-Player--blue { --colour-a: var(--colour-blue-bg); }
+.o-Player--secondaryBlue { --colour-b: var(--colour-blue-bg); }
+
+.o-Player--white { --colour-a: var(--colour-white-bg); }
+.o-Player--secondaryWhite { --colour-b: var(--colour-white-bg); }
+
+.o-Player--white,
+.o-Player--secondaryWhite
 {
-    color: var(--colour-light-fg);
-    background-color: var(--colour-red-bg);
+    --shadow-colour: var(--colour-dark-fg);
 }
 
-.o-Player--green
-{
-    color: var(--colour-light-fg);
-    background-color: var(--colour-green-bg);
-}
+.o-Player--black { --colour-a: var(--colour-black-bg); }
+.o-Player--secondaryBlack { --colour-b: var(--colour-black-bg); }
 
-.o-Player--blue
-{
-    color: var(--colour-light-fg);
-    background-color: var(--colour-blue-bg);
-}
-
-.o-Player--white
-{
-    color: var(--colour-dark-fg);
-    background-color: var(--colour-white-bg);
-}
-
-.o-Player--black
-{
-    color: var(--colour-light-fg);
-    background-color: var(--colour-black-bg);
-}
-
-.o-Player--grey
-{
-    color: var(--colour-light-fg);
-    background-color: var(--colour-grey-bg);
-}
+.o-Player--grey { --colour-a: var(--colour-grey-bg); }
+.o-Player--secondaryGrey { --colour-a: var(--colour-grey-bg); }
 
 .o-Player__nameHeading
 {
@@ -238,9 +243,11 @@ body
     height: var(--button-size);
     font-size: calc(var(--scale) * 1em);
     line-height: 0.5; /* FIXME font–specific. Probably need to go with icons. */
+    text-shadow: inherit;
     vertical-align: middle;
     border: currentColor solid;
     border-radius: 50%;
+    box-shadow: 0 0 0.125ch var(--shadow-colour);
 }
 
 .m-Life__button::before
