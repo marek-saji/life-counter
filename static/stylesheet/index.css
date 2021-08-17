@@ -108,8 +108,7 @@ body
     transition: transform ease-in 200ms;
 }
 
-.o-Player--opponent:not(:focus-within) > .o-Player__content,
-.o-Player--opponent[data-button-focus-within=true] > .o-Player__content
+.o-Player--opponent > .o-Player__content
 {
     transform: rotate(180deg);
 }
@@ -152,13 +151,35 @@ body
 
 .o-Player__nameHeading
 {
+    position: relative;
+    z-index: 1;
+    display: inline-block;
     margin: 0;
+    overflow: hidden;
     transition: transform ease-in-out 200ms;
 }
 
 .o-Player[data-chosen=true] .o-Player__nameHeading
 {
     transform: scale(2); /* FIXME Maybe o-Player background animation instead? */
+}
+
+.o-Player__name
+{
+    width: 100vw;
+    border: 0;
+}
+
+.o-Player__nameChange
+ {
+    position: absolute;
+    top: 0;
+    right: 100%;
+    bottom: 100%;
+    left: 0;
+    margin: 0;
+    padding: 0;
+    padding-top: 9em;
 }
 
 .o-Player__message
@@ -189,14 +210,6 @@ body
 {
     display: block;
     opacity: 0;
-}
-
-.o-Player__name
-{
-    position: relative;
-    z-index: 1;
-    width: 100vw;
-    border: 0;
 }
 
 /* molecule: Life */

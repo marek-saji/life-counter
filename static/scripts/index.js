@@ -123,6 +123,31 @@ function handleStepperFocus (event)
     }, { once: true });
 }
 
+function handleNameChangeClick (event)
+{
+    const playerElement = event.target.closest('[data-player]');
+    const nameElement = playerElement.querySelector('[data-component=name]');
+    const playerId = playerElement.dataset.player;
+    const player = players.get(playerId);
+    const defaultName = `Player ${playerId}`;
+
+    // eslint-disable-next-line no-alert
+    let newName = window.prompt('New name', player.name); // TODO Better UI
+    if (newName === null)
+    {
+        // cancelled
+        return;
+    }
+
+    newName =
+        newName.trim()
+        || nameElement.dataset.default
+        || defaultName;
+    player.name = newName;
+    nameElement.textContent = newName;
+    saveCurrentGame();
+}
+
 function resetPlayers ()
 {
     players.forEach((player) => {
@@ -189,6 +214,8 @@ async function main ()
             // eslint-disable-next-line no-param-reassign
             stepper.hidden = false;
         });
+
+        playerElement.querySelector('[data-component=name-change]').addEventListener('click', handleNameChangeClick);
     });
 
     restoreCurrentGame();
