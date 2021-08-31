@@ -11,7 +11,7 @@
    height="512"
    viewBox="0 0 512 512"
    version="1.1"
-   inkscape:version="1.0.1 (3bc2e813f5, 2020-09-07)"
+   inkscape:version="1.0.2 (e86c870879, 2021-01-15)"
    sodipodi:docname="icon.svg"
    id="svg13">
   <defs
@@ -30,10 +30,10 @@
      inkscape:current-layer="layer1"
      showgrid="false"
      units="px"
-     inkscape:window-width="2560"
-     inkscape:window-height="1403"
+     inkscape:window-width="1920"
+     inkscape:window-height="1016"
      inkscape:window-x="0"
-     inkscape:window-y="0"
+     inkscape:window-y="27"
      inkscape:window-maximized="1"
      inkscape:pagecheckerboard="true"
      showguides="true"
@@ -43,25 +43,33 @@
      inkscape:document-rotation="0"
      inkscape:snap-to-guides="false">
     <sodipodi:guide
-       position="51.222654,280.4654"
-       orientation="1,0"
+       position="51.223,512"
+       orientation="-1,0"
        id="guide816"
-       inkscape:locked="false" />
+       inkscape:locked="false"
+       inkscape:label=""
+       inkscape:color="rgb(0,0,255)" />
     <sodipodi:guide
-       position="460.77735,265.80054"
-       orientation="1,0"
+       position="460.777,512"
+       orientation="-1,0"
        id="guide822"
-       inkscape:locked="false" />
+       inkscape:locked="false"
+       inkscape:label=""
+       inkscape:color="rgb(0,0,255)" />
     <sodipodi:guide
-       position="256,460.77345"
+       position="0,460.773"
        orientation="0,1"
        id="guide824"
-       inkscape:locked="false" />
+       inkscape:locked="false"
+       inkscape:label=""
+       inkscape:color="rgb(0,0,255)" />
     <sodipodi:guide
-       position="265.18951,51.21876"
+       position="0,51.219"
        orientation="0,1"
        id="guide826"
-       inkscape:locked="false" />
+       inkscape:locked="false"
+       inkscape:label=""
+       inkscape:color="rgb(0,0,255)" />
   </sodipodi:namedview>
   <metadata
      id="metadata5">
