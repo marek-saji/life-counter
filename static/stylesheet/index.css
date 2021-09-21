@@ -69,6 +69,7 @@ button
 
 input
 {
+    max-width: 100%;
     border: currentColor solid thin;
     border-radius: 0.25ch;
 }

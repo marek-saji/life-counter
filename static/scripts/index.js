@@ -169,6 +169,96 @@ function drawPlayer ()
     }, 500);
 }
 
+function toggleSettings (playerId, visible)
+{
+    const {
+        nameElement,
+        lifeElement,
+        settingsElement,
+    } = players.get(playerId);
+
+    nameElement.parentNode.hidden = visible;
+    lifeElement.parentNode.hidden = visible;
+    settingsElement.hidden = !visible;
+}
+
+function handleSettingsShow (event)
+{
+    event.preventDefault();
+
+    const playerElement = event.target.closest('[data-player]');
+    const playerId = playerElement.dataset.player;
+    const { settingsElement } = players.get(playerId);
+
+    const data = players.get(playerId);
+
+    settingsElement.querySelector('[name=name]').value = data.name;
+
+    const mainColourCheckobox =
+        Array.from(settingsElement.querySelectorAll('[name=mainColour]'))
+            .find((ch) => ch.value === data.mainColour);
+    if (mainColourCheckobox)
+    {
+        mainColourCheckobox.checked = true;
+    }
+
+    const secondaryColourCheckbox =
+        Array.from(settingsElement.querySelectorAll('[name=secondaryColour]'))
+            .find((ch) => ch.value === data.secondaryColour);
+    if (secondaryColourCheckbox)
+    {
+        secondaryColourCheckbox.checked = true;
+    }
+
+    toggleSettings(playerId, true);
+}
+
+function handleSettingsHide (event)
+{
+    event.preventDefault();
+
+    const playerElement = event.target.closest('[data-player]');
+    const playerId = playerElement.dataset.player;
+    const data = players.get(playerId);
+    const { settingsForm } = data;
+
+    const settings = Object.fromEntries(new FormData(settingsForm));
+    Object.assign(data, settings);
+    saveCurrentGame();
+
+    toggleSettings(playerId, false);
+}
+
+function handleNameChange (event)
+{
+    const playerElement = event.target.closest('[data-player]');
+    const playerId = playerElement.dataset.player;
+    const { nameElement } = players.get(playerId);
+
+    const nameInput = event.target;
+
+    if (!nameInput.value)
+    {
+        nameInput.value = nameInput.getAttribute('value');
+    }
+
+    nameElement.textContent = nameInput.value;
+}
+
+function handleMainColourChange (event)
+{
+    const playerElement = event.target.closest('[data-player]');
+    // eslint-disable-next-line no-param-reassign
+    playerElement.dataset.mainColour = event.target.value;
+}
+
+function handleSecondaryColourChange (event)
+{
+    const playerElement = event.target.closest('[data-player]');
+    // eslint-disable-next-line no-param-reassign
+    playerElement.dataset.secondaryColour = event.target.value;
+}
+
 async function requestScreenLock ()
 {
     // TODO Polyfill for wekeLock
@@ -218,8 +308,9 @@ async function main ()
     document.querySelectorAll('[data-player]').forEach((playerElement) => {
         const nameElement = playerElement.querySelector('[data-component=name]');
         const lifeElement = playerElement.querySelector('[data-component=life]');
-        const settingsElement = playerElement.querySelector('[data-component=settings]');
         const messageElement = playerElement.querySelector('[data-component=message]');
+        const settingsElement = playerElement.querySelector('[data-component=settings]');
+        const settingsForm = settingsElement.querySelector('form');
         const data = {
             playerElement,
             life: STARTING_LIFE,
@@ -228,60 +319,12 @@ async function main ()
             nameElement,
             messageElement,
             messageTimeoutId: null,
+            settingsElement,
+            settingsForm,
             mainColour: playerElement.dataset.mainColour,
             secondaryColour: playerElement.dataset.secondaryColour,
         };
         players.set(playerElement.dataset.player, data);
-
-        // FIXME Reorganise settings-related functions, DRY and stuff, eslint
-
-        const setPlayerMainColourInUI = (colour) => {
-            // eslint-disable-next-line no-param-reassign
-            playerElement.dataset.mainColour = colour;
-        };
-
-        const setPlayerSecondaryColourInUI = (colour) => {
-            // eslint-disable-next-line no-param-reassign
-            playerElement.dataset.secondaryColour = colour;
-        };
-
-        const toggleSettings = (visible) => {
-            nameElement.parentNode.hidden = visible;
-            lifeElement.parentNode.hidden = visible;
-            settingsElement.hidden = !visible;
-        };
-
-        const showSettings = () => {
-            settingsElement.querySelector('[name=name]').value = data.name;
-            const mainColourCheckobox = Array.from(settingsElement.querySelectorAll('[name=mainColour]'))
-                .find((checkbox) => checkbox.value === data.mainColour);
-            if (mainColourCheckobox)
-            {
-                mainColourCheckobox.checked = true;
-            }
-            const secondaryColourCheckbox =
-                Array.from(settingsElement.querySelectorAll('[name=secondaryColour]'))
-                    .find((checkbox) => checkbox.value === data.secondaryColour);
-            if (secondaryColourCheckbox)
-            {
-                secondaryColourCheckbox.checked = true;
-            }
-
-            toggleSettings(true);
-        };
-
-        const hideSettings = () => {
-            const form = settingsElement.querySelector('form');
-            const settings = Object.fromEntries(new FormData(form));
-            Object.assign(data, settings);
-            saveCurrentGame();
-
-            nameElement.textContent = data.name;
-            setPlayerMainColourInUI(data.mainColour);
-            setPlayerSecondaryColourInUI(data.secondaryColour);
-
-            toggleSettings(false);
-        };
 
         playerElement.querySelectorAll('[data-step]').forEach((stepper) => {
             stepper.addEventListener('focus', handleStepperFocus);
@@ -290,24 +333,21 @@ async function main ()
             stepper.hidden = false;
         });
 
-        playerElement.querySelector('[data-component=settings-button]').addEventListener('click', () => {
-            showSettings();
-        });
+        playerElement.querySelector('[data-component=settings-button]')
+            .addEventListener('click', handleSettingsShow);
 
+        playerElement.querySelector('[name=name]')
+            .addEventListener('change', handleNameChange);
         playerElement.querySelectorAll('[name=mainColour]').forEach((mainColourElement) => {
-            mainColourElement.addEventListener('change', (event) => {
-                setPlayerMainColourInUI(event.target.value);
-            });
+            mainColourElement
+                .addEventListener('change', handleMainColourChange);
         });
         playerElement.querySelectorAll('[name=secondaryColour]').forEach((secondaryColourElement) => {
-            secondaryColourElement.addEventListener('change', (event) => {
-                setPlayerSecondaryColourInUI(event.target.value);
-            });
+            secondaryColourElement
+                .addEventListener('change', handleSecondaryColourChange);
         });
-        playerElement.querySelector('[name=done]')?.addEventListener('click', (event) => {
-            event.preventDefault();
-            hideSettings();
-        });
+        playerElement.querySelector('[name=done]')
+            ?.addEventListener('click', handleSettingsHide);
     });
 
     restoreCurrentGame();
