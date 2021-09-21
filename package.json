@@ -18,7 +18,8 @@
   "module": "index.js",
   "directories": {},
   "scripts": {
-    "start": "npx browser-sync --port 5000 static --watch",
+    "dev": "npx browser-sync --port 5000 static --watch",
+    "start": "npx open-cli static/index.html",
     "validate": "npm-run-all --parallel --print-name --aggregate-output test lint",
     "test": "echo 'No tests (yet)'",
     "lint": "npm-run-all --parallel --print-name --aggregate-output 'lint:*'",
