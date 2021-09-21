@@ -157,8 +157,10 @@ function resetPlayers ()
         /* eslint-disable no-param-reassign */
         player.life = STARTING_LIFE;
         player.lifeElement.textContent = player.life;
+        player.playerElement.dataset.dead = 'false';
         player.name = player.nameElement.textContent;
         player.messageElement.hidden = true;
+        player.messageElement.dataset.change = '0';
         clearTimeout(player.messageTimeoutId);
         /* eslint-enable no-param-reassign */
     });
