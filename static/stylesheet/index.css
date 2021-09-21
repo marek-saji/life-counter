@@ -122,6 +122,7 @@ body
 
 .o-Player__content
 {
+    position: relative;
     transition: transform ease-in 200ms;
 }
 
@@ -213,7 +214,7 @@ body
 .o-Player__message
 {
     position: absolute;
-    top: 0.5em;
+    top: 0;
     left: 50%;
     z-index: 1;
     max-width: 100%;
