@@ -215,6 +215,7 @@ body
     position: absolute;
     top: 0.5em;
     left: 50%;
+    z-index: 1;
     max-width: 100%;
     padding: 0.5em;
     font-weight: bold;
