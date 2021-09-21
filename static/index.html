@@ -16,19 +16,19 @@
 </head>
 <body>
 
-    <form class="t-App">
+    <main class="t-App">
         <header class="t-App__toolbox">
             <button type="reset" class="a-Action" aria-label="Start new game">
                 ⭯
             </button>
         </header>
 
-        <section data-player=2 class="t-App__panel o-Player o-Player--opponent o-Player--red">
+        <section data-player=2 class="t-App__panel o-Player o-Player--opponent" data-main-colour="red">
             <div class="o-Player__content">
                 <h2 class="o-Player__nameHeading">
                     <span class="o-Player__name" data-component=name data-default="Opponent">Opponent</span>
-                    <button type=button class="o-Player__nameChange" data-component=name-change>
-                        Change name
+                    <button type=button class="o-Player__openSettings" data-component=settings-button>
+                        Settings
                     </button>
                 </h2>
 
@@ -56,15 +56,72 @@
                         +
                     </button>
                 </div>
+
+                <section class="o-Settings" aria-label="Settings" hidden data-component="settings">
+                    <form>
+                        <input name="name" type="text" value="Opponent">
+
+                        <fieldset class="m-Options">
+                            <p class="m-Options__item">
+                                <label for=mainColour_white-2>
+                                    <input id=mainColour_white-2 name="mainColour" type=radio value="white" class="m-Options__checkbox">
+                                    <span class="m-Options__icon">☀️</span>
+                                    <span class="m-Options__label">White</span>
+                                </label>
+                            </p>
+                            <p class="m-Options__item">
+                                <label for=mainColour_blue-2>
+                                    <input id=mainColour_blue-2 name="mainColour" type=radio value="blue" class="m-Options__checkbox">
+                                    <span class="m-Options__icon">💧</span>
+                                    <span class="m-Options__label">Blue</span>
+                                </label>
+                            </p>
+                            <p class="m-Options__item">
+                                <label for=mainColour_black-2>
+                                    <input id=mainColour_black-2 name="mainColour" type=radio value="black" class="m-Options__checkbox">
+                                    <span class="m-Options__icon">💀</span>
+                                    <span class="m-Options__label">Black</span>
+                                </label>
+                            </p>
+                            <p class="m-Options__item">
+                                <label for=mainColour_red-2>
+                                    <input id=mainColour_red-2 name="mainColour" type=radio value="red" class="m-Options__checkbox" checked>
+                                    <span class="m-Options__icon">🔥</span>
+                                    <span class="m-Options__label">Red</span>
+                                </label>
+                            </p>
+                            <p class="m-Options__item">
+                                <label for=mainColour_green-2>
+                                    <input id=mainColour_green-2 name="mainColour" type=radio value="green" class="m-Options__checkbox">
+                                    <span class="m-Options__icon">🌳</span>
+                                    <span class="m-Options__label">Green</span>
+                                </label>
+                            </p>
+                            <p class="m-Options__item">
+                                <label for=mainColour_grey-2>
+                                    <input id=mainColour_grey-2 name="mainColour" type=radio value="grey" class="m-Options__checkbox">
+                                    <span class="m-Options__icon">🤖</span>
+                                    <span class="m-Options__label">Colourless</span>
+                                </label>
+                            </p>
+                        </fieldset>
+
+                        <p>
+                            <button type=submit name=done>
+                                ✅ Done
+                            </button>
+                        </p>
+                    </form>
+                </section>
             </div>
         </section>
 
-        <section data-player=1 class="t-App__panel o-Player o-Player--black">
+        <section data-player=1 class="t-App__panel o-Player" data-main-colour="black">
             <div class="o-Player__content">
                 <h2 class="o-Player__nameHeading">
                     <span class="o-Player__name" data-component=name data-default="Me">Me</span>
-                    <button type=button class="o-Player__nameChange" data-component=name-change>
-                        Change name
+                    <button type=button class="o-Player__openSettings" data-component=settings-button>
+                        Settings
                     </button>
                 </h2>
 
@@ -92,9 +149,66 @@
                         +
                     </button>
                 </div>
+
+                <section class="o-Settings" aria-label="Settings" hidden data-component="settings">
+                    <form>
+                        <input name="name" type="text" value="Me">
+
+                        <fieldset class="m-Options">
+                            <p class="m-Options__item">
+                                <label for=mainColour_white>
+                                    <input id=mainColour_white name="mainColour" type=radio value="white" class="m-Options__checkbox">
+                                    <span class="m-Options__icon">☀️</span>
+                                    <span class="m-Options__label">White</span>
+                                </label>
+                            </p>
+                            <p class="m-Options__item">
+                                <label for=mainColour_blue>
+                                    <input id=mainColour_blue name="mainColour" type=radio value="blue" class="m-Options__checkbox">
+                                    <span class="m-Options__icon">💧</span>
+                                    <span class="m-Options__label">Blue</span>
+                                </label>
+                            </p>
+                            <p class="m-Options__item">
+                                <label for=mainColour_black>
+                                    <input id=mainColour_black name="mainColour" type=radio value="black" class="m-Options__checkbox" checked>
+                                    <span class="m-Options__icon">💀</span>
+                                    <span class="m-Options__label">Black</span>
+                                </label>
+                            </p>
+                            <p class="m-Options__item">
+                                <label for=mainColour_red>
+                                    <input id=mainColour_red name="mainColour" type=radio value="red" class="m-Options__checkbox">
+                                    <span class="m-Options__icon">🔥</span>
+                                    <span class="m-Options__label">Red</span>
+                                </label>
+                            </p>
+                            <p class="m-Options__item">
+                                <label for=mainColour_green>
+                                    <input id=mainColour_green name="mainColour" type=radio value="green" class="m-Options__checkbox">
+                                    <span class="m-Options__icon">🌳</span>
+                                    <span class="m-Options__label">Green</span>
+                                </label>
+                            </p>
+                            <p class="m-Options__item">
+                                <label for=mainColour_grey>
+                                    <input id=mainColour_grey name="mainColour" type=radio value="grey" class="m-Options__checkbox">
+                                    <span class="m-Options__icon">🤖</span>
+                                    <span class="m-Options__label">Colourless</span>
+                                </label>
+                            </p>
+                        </fieldset>
+
+                        <p>
+                            <button type=submit name=done>
+                                ✅ Done
+                            </button>
+                        </p>
+                    </form>
+                </section>
             </div>
         </section>
-    </form>
+    </main>
 
 </body>
 </html>

@@ -13,6 +13,8 @@ async function serialiseGame ()
                 id,
                 name: data.name,
                 life: data.life,
+                mainColour: data.mainColour,
+                secondaryColour: data.secondaryColour || undefined,
             })),
     };
 }
@@ -24,10 +26,17 @@ async function deserialiseGame (state)
         const player = players.get(item.id);
         player.name = item.name;
         player.life = item.life;
+        player.mainColour =
+            item.mainColour || player.mainColour;
+        player.secondaryColour =
+            item.secondaryColour || player.secondaryColour;
 
         player.nameElement.textContent = player.name;
         player.lifeElement.textContent = player.life;
-        player.playerElement.dataset.dead = player.life <= 0;
+        player.playerElement.dataset.dead = player.life <= 0 ? 'true' : 'false';
+        player.playerElement.dataset.mainColour = player.mainColour;
+        player.playerElement.dataset.secondaryColour =
+            player.secondaryColour;
     });
 }
 
@@ -93,7 +102,7 @@ function handleStepperClick (event)
     player.life += step;
     player.lifeElement.textContent = player.life;
 
-    playerElement.dataset.dead = player.life <= 0;
+    playerElement.dataset.dead = player.life <= 0 ? 'true' : 'false';
 
     const change =
         parseInt(player.messageElement.dataset.change || 0, 10) + step;
@@ -126,31 +135,6 @@ function handleStepperFocus (event)
     }, { once: true });
 }
 
-function handleNameChangeClick (event)
-{
-    const playerElement = event.target.closest('[data-player]');
-    const nameElement = playerElement.querySelector('[data-component=name]');
-    const playerId = playerElement.dataset.player;
-    const player = players.get(playerId);
-    const defaultName = `Player ${playerId}`;
-
-    // eslint-disable-next-line no-alert
-    let newName = window.prompt('New name', player.name); // TODO Better UI
-    if (newName === null)
-    {
-        // cancelled
-        return;
-    }
-
-    newName =
-        newName.trim()
-        || nameElement.dataset.default
-        || defaultName;
-    player.name = newName;
-    nameElement.textContent = newName;
-    saveCurrentGame();
-}
-
 function resetPlayers ()
 {
     players.forEach((player) => {
@@ -168,7 +152,13 @@ function resetPlayers ()
 
 function drawPlayer ()
 {
-    const playerIds = Array.from(players.keys());
+    const deadPlayersIds = Array.from(players.entries())
+        .filter(([, player]) => player.life <= 0)
+        .map(([id]) => id);
+    const playerIds =
+        deadPlayersIds.length
+            ? deadPlayersIds
+            : Array.from(players.keys());
     const playerId =
         playerIds[Math.floor(Math.random() * playerIds.length)];
     const player = players.get(playerId);
@@ -226,8 +216,9 @@ async function main ()
     }
 
     document.querySelectorAll('[data-player]').forEach((playerElement) => {
-        const lifeElement = playerElement.querySelector('[data-component=life]');
         const nameElement = playerElement.querySelector('[data-component=name]');
+        const lifeElement = playerElement.querySelector('[data-component=life]');
+        const settingsElement = playerElement.querySelector('[data-component=settings]');
         const messageElement = playerElement.querySelector('[data-component=message]');
         const data = {
             playerElement,
@@ -237,8 +228,60 @@ async function main ()
             nameElement,
             messageElement,
             messageTimeoutId: null,
+            mainColour: playerElement.dataset.mainColour,
+            secondaryColour: playerElement.dataset.secondaryColour,
         };
         players.set(playerElement.dataset.player, data);
+
+        // FIXME Reorganise settings-related functions, DRY and stuff, eslint
+
+        const setPlayerMainColourInUI = (colour) => {
+            // eslint-disable-next-line no-param-reassign
+            playerElement.dataset.mainColour = colour;
+        };
+
+        const setPlayerSecondaryColourInUI = (colour) => {
+            // eslint-disable-next-line no-param-reassign
+            playerElement.dataset.secondaryColour = colour;
+        };
+
+        const toggleSettings = (visible) => {
+            nameElement.parentNode.hidden = visible;
+            lifeElement.parentNode.hidden = visible;
+            settingsElement.hidden = !visible;
+        };
+
+        const showSettings = () => {
+            settingsElement.querySelector('[name=name]').value = data.name;
+            const mainColourCheckobox = Array.from(settingsElement.querySelectorAll('[name=mainColour]'))
+                .find((checkbox) => checkbox.value === data.mainColour);
+            if (mainColourCheckobox)
+            {
+                mainColourCheckobox.checked = true;
+            }
+            const secondaryColourCheckbox =
+                Array.from(settingsElement.querySelectorAll('[name=secondaryColour]'))
+                    .find((checkbox) => checkbox.value === data.secondaryColour);
+            if (secondaryColourCheckbox)
+            {
+                secondaryColourCheckbox.checked = true;
+            }
+
+            toggleSettings(true);
+        };
+
+        const hideSettings = () => {
+            const form = settingsElement.querySelector('form');
+            const settings = Object.fromEntries(new FormData(form));
+            Object.assign(data, settings);
+            saveCurrentGame();
+
+            nameElement.textContent = data.name;
+            setPlayerMainColourInUI(data.mainColour);
+            setPlayerSecondaryColourInUI(data.secondaryColour);
+
+            toggleSettings(false);
+        };
 
         playerElement.querySelectorAll('[data-step]').forEach((stepper) => {
             stepper.addEventListener('focus', handleStepperFocus);
@@ -247,7 +290,24 @@ async function main ()
             stepper.hidden = false;
         });
 
-        playerElement.querySelector('[data-component=name-change]').addEventListener('click', handleNameChangeClick);
+        playerElement.querySelector('[data-component=settings-button]').addEventListener('click', () => {
+            showSettings();
+        });
+
+        playerElement.querySelectorAll('[name=mainColour]').forEach((mainColourElement) => {
+            mainColourElement.addEventListener('change', (event) => {
+                setPlayerMainColourInUI(event.target.value);
+            });
+        });
+        playerElement.querySelectorAll('[name=secondaryColour]').forEach((secondaryColourElement) => {
+            secondaryColourElement.addEventListener('change', (event) => {
+                setPlayerSecondaryColourInUI(event.target.value);
+            });
+        });
+        playerElement.querySelector('[name=done]')?.addEventListener('click', (event) => {
+            event.preventDefault();
+            hideSettings();
+        });
     });
 
     restoreCurrentGame();
@@ -262,13 +322,11 @@ async function main ()
             await pushGame();
         }
 
-        resetPlayers();
         drawPlayer();
+        resetPlayers();
 
         saveCurrentGame();
     });
-
-    // TODO Click player name to edit it, but also change bg colour
 
     // TODO Sync somewhere
 }

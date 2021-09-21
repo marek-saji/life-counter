@@ -46,14 +46,31 @@ html
     color: inherit;
     font: inherit;
     text-align: inherit;
+    text-shadow: inherit;
     background-color: transparent;
     border: none;
+}
+
+[hidden]
+{
+    display: none !important;
 }
 
 body
 {
     height: 100%;
     margin: 0;
+}
+
+button
+{
+    cursor: pointer;
+}
+
+input
+{
+    border: currentColor solid thin;
+    border-radius: 0.25ch;
 }
 
 @media (prefers-reduced-motion)
@@ -89,6 +106,7 @@ body
 .t-App__panel
 {
     grid-column-end: span 2;
+    padding-block: calc(var(--action-button-size) / 2);
 }
 
 /* organism: Player */
@@ -104,12 +122,22 @@ body
     display: flex;
     flex-direction: column;
     justify-content: center;
+    height: 50vh;
     overflow: hidden;
     color: var(--colour-light-fg);
     text-shadow: 0 0 0.25ch var(--shadow-colour);
+    background: var(--colour-a);
+    outline: var(--colour-section-separator) solid 1px;
+    transition: background ease-in 200ms;
+}
+
+.o-Player[data-secondary-colour]:not([data-secondary-colour="undefined"])
+{
+    /* Use gradient only if second colour is defined, because transition
+     * doesn’t work for background-image (which gradient is) */
     background:
         linear-gradient(
-            to left,
+            to right,
             var(--colour-a),
             calc(50% - var(--gradient-width) / 2),
             var(--colour-a),
@@ -117,7 +145,6 @@ body
             calc(50% + var(--gradient-width) / 2),
             var(--colour-b)
         );
-    outline: var(--colour-section-separator) solid 1px;
 }
 
 .o-Player__content
@@ -131,29 +158,34 @@ body
     transform: rotate(180deg);
 }
 
-.o-Player--red { --colour-a: var(--colour-red-bg); }
-.o-Player--secondaryRed { --colour-b: var(--colour-red-bg); }
+.o-Player--opponent [name="name"]:focus
+{
+    transform: rotate(180deg);
+}
 
-.o-Player--green { --colour-a: var(--colour-green-bg); }
-.o-Player--secondaryGreen { --colour-b: var(--colour-green-bg); }
+[data-main-colour=red] { --colour-a: var(--colour-red-bg); }
+[data-secondary-colour=red] { --colour-b: var(--colour-red-bg); }
 
-.o-Player--blue { --colour-a: var(--colour-blue-bg); }
-.o-Player--secondaryBlue { --colour-b: var(--colour-blue-bg); }
+[data-main-colour=green] { --colour-a: var(--colour-green-bg); }
+[data-secondary-colour=green] { --colour-b: var(--colour-green-bg); }
 
-.o-Player--white { --colour-a: var(--colour-white-bg); }
-.o-Player--secondaryWhite { --colour-b: var(--colour-white-bg); }
+[data-main-colour=blue] { --colour-a: var(--colour-blue-bg); }
+[data-secondary-colour=blue] { --colour-b: var(--colour-blue-bg); }
 
-.o-Player--white,
-.o-Player--secondaryWhite
+[data-main-colour=white] { --colour-a: var(--colour-white-bg); }
+[data-secondary-colour=white] { --colour-b: var(--colour-white-bg); }
+
+[data-main-colour=white],
+[data-secondary-colour=white]
 {
     --shadow-colour: var(--colour-dark-fg);
 }
 
-.o-Player--black { --colour-a: var(--colour-black-bg); }
-.o-Player--secondaryBlack { --colour-b: var(--colour-black-bg); }
+[data-main-colour=black] { --colour-a: var(--colour-black-bg); }
+[data-secondary-colour=black] { --colour-b: var(--colour-black-bg); }
 
-.o-Player--grey { --colour-a: var(--colour-grey-bg); }
-.o-Player--secondaryGrey { --colour-a: var(--colour-grey-bg); }
+[data-main-colour=grey] { --colour-a: var(--colour-grey-bg); }
+[data-secondary-colour=grey] { --colour-a: var(--colour-grey-bg); }
 
 .o-Player__nameHeading
 {
@@ -199,7 +231,7 @@ body
     border: 0;
 }
 
-.o-Player__nameChange
+.o-Player__openSettings
  {
     position: absolute;
     top: 0;
@@ -268,7 +300,6 @@ body
     height: var(--button-size);
     font-size: calc(var(--scale) * 1em);
     line-height: 0.5; /* FIXME font–specific. Probably need to go with icons. */
-    text-shadow: inherit;
     vertical-align: middle;
     border: currentColor solid;
     border-radius: 50%;
@@ -319,6 +350,60 @@ body
         flex-direction: row;
         flex-wrap: wrap;
     }
+}
+
+/* molecule: Options */
+
+.m-Options
+ {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    font-size: 0.7em;
+    text-align: start;
+}
+
+.m-Options__item
+{
+    display: inline-block;
+    margin: 0;
+}
+
+.m-Options__checkbox,
+.m-Options__label
+{
+    width: 0;
+    height: 0;
+    margin: 0;
+    overflow: hidden;
+}
+
+.m-Options__icon
+{
+    --size: 2em;
+
+    display: inline-block;
+    width: var(--size);
+    height: var(--size);
+    line-height: var(--size);
+    text-align: center;
+    border: transparent solid thin;
+    border-radius: 25%;
+    filter: grayscale();
+}
+
+.m-Options__label
+{
+    display: inline-block;
+    width: 0;
+    height: 0;
+    overflow: hidden;
+}
+
+:checked + .m-Options__icon
+{
+    border-color: currentColor;
+    filter: none;
 }
 
 /* atom: Action */
