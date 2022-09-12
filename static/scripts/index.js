@@ -250,6 +250,12 @@ function handleMainColourChange (event)
     const playerElement = event.target.closest('[data-player]');
     // eslint-disable-next-line no-param-reassign
     playerElement.dataset.mainColour = event.target.value;
+
+    if (playerElement.dataset.player === '2')
+    {
+        document.querySelector('meta[name=theme-color]')
+            .setAttribute('content', event.target.value);
+    }
 }
 
 function handleSecondaryColourChange (event)
