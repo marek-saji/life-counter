@@ -25,12 +25,14 @@
     /* sizes */
 
     --action-button-size: 1.5em;
+    --life-font-size: 2.7em;
 }
 
 html
 {
     box-sizing: border-box;
     height: 100%;
+    height: 100dvh;
     color: var(--colour-fg);
     font-size: 5vh; /* FIXME In general adapt to weird aspect ratios better */
     font-family: serif;
@@ -89,9 +91,9 @@ input
 {
     display: grid;
     grid-template:
-        "a1 a2"
+        "a1 a2" 1fr
         "toolbox toolbox" 0
-        "b1 b2";
+        "b1 b2" 1fr;
     align-items: stretch;
     width: 100%;
     height: 100%;
@@ -101,6 +103,7 @@ input
 {
     z-index: 2;
     grid-area: toolbox;
+    height: 0;
     margin-block-start: calc(var(--action-button-size) / -2);
 }
 
@@ -123,7 +126,6 @@ input
     display: flex;
     flex-direction: column;
     justify-content: center;
-    height: 50vh;
     overflow: hidden;
     color: var(--colour-light-fg);
     text-shadow: 0 0 0.25ch var(--shadow-colour);
@@ -150,11 +152,10 @@ input
 
 .o-Player__content
 {
-    position: relative;
     transition: transform ease-in 200ms;
 }
 
-.o-Player--opponent > .o-Player__content
+.o-Player--opponent
 {
     transform: rotate(180deg);
 }
@@ -191,12 +192,12 @@ input
 .o-Player__nameHeading
 {
     position: relative;
+    transition: transform ease-in-out 200ms;
     z-index: 1;
     display: inline-block;
     margin: 0;
     padding-block: 0.25em;
     overflow: hidden;
-    transition: transform ease-in-out 200ms;
 }
 
 .o-Player[data-chosen=true] .o-Player__nameHeading
@@ -236,18 +237,50 @@ input
  {
     position: absolute;
     top: 0;
-    right: 100%;
-    bottom: 100%;
-    left: 0;
+    right: 0;
+    display: block;
+    width: var(--action-button-size);
+    height: var(--action-button-size);
+    line-height: var(--action-button-size);
+    overflow: hidden;
+    white-space: pre;
     margin: 0;
     padding: 0;
-    padding-top: 9em;
+}
+
+@supports (height: 1dvh)
+{
+    .o-Player__openSettings
+    {
+        top: auto;
+        bottom: 0;
+    }
+}
+
+.o-Player__openSettings::before
+{
+    content: '⚙️';
+    filter: brightness(0) contrast(0.8);
+    opacity: 0.5;
+    transition: opacity ease-out 200ms;
+}
+
+.o-Player__openSettings[aria-selected="true"]::before
+{
+    content: '✔';
+    filter: none;
+    opacity: 1;
+    transition:
+        opacity ease-out 200ms,
+        filter ease-out 200ms;
 }
 
 .o-Player__message
 {
+    --offset-y: 0em;
+
     position: absolute;
-    top: 0;
+    top: 50%;
     left: 50%;
     z-index: 1;
     max-width: 100%;
@@ -256,7 +289,9 @@ input
     font-family: sans-serif;
     background-color: rgba(0, 0, 0, 0.7);
     border-radius: 0.5em;
-    transform: translateX(-50%);
+    transform:
+        translateX(-50%)
+        translateY(calc(-0.75 * var(--life-font-size) + var(--offset-y)));
     transition:
         opacity ease-out 200ms,
         transform ease-in 200ms;
@@ -265,7 +300,8 @@ input
 
 .o-Player__message[data-incoming=true]
 {
-    transform: translateX(-50%) translateY(0.25em);
+    --offset-y: 0.25em;
+
     transition: opacity ease-out 200ms;
 }
 
@@ -282,11 +318,12 @@ input
     --value-width: 3.5ch;
     --button-size: 1.5ch;
 
+    position: relative;
     display: flex;
     flex-direction: column-reverse;
     align-items: center;
     justify-content: center;
-    font-size: 2.7em;
+    font-size: var(--life-font-size);
     padding-inline: 0.1em;
 }
 
@@ -360,8 +397,10 @@ input
     display: flex;
     flex-wrap: wrap;
     justify-content: space-evenly;
-    font-size: 0.7em;
+    font-size: 0.65em;
     text-align: start;
+    margin-inline: 0;
+    padding-inline: 0;
 }
 
 .m-Options__item

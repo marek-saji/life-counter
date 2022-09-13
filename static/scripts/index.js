@@ -175,11 +175,31 @@ function toggleSettings (playerId, visible)
         nameElement,
         lifeElement,
         settingsElement,
+        settingsButton,
     } = players.get(playerId);
 
     nameElement.parentNode.hidden = visible;
     lifeElement.parentNode.hidden = visible;
     settingsElement.hidden = !visible;
+    settingsButton.setAttribute('aria-selected', visible ? 'true' : 'false')
+}
+
+function handleSettingsToggle (event)
+{
+    event.preventDefault();
+
+    const playerElement = event.target.closest('[data-player]');
+    const playerId = playerElement.dataset.player;
+    const { settingsElement } = players.get(playerId);
+
+    if (settingsElement.hidden)
+    {
+        handleSettingsShow(event);
+    }
+    else
+    {
+        handleSettingsHide(event);
+    }
 }
 
 function handleSettingsShow (event)
@@ -317,6 +337,7 @@ async function main ()
         const messageElement = playerElement.querySelector('[data-component=message]');
         const settingsElement = playerElement.querySelector('[data-component=settings]');
         const settingsForm = settingsElement.querySelector('form');
+        const settingsButton = playerElement.querySelector('[data-component=settings-button]');
         const data = {
             playerElement,
             life: STARTING_LIFE,
@@ -327,6 +348,7 @@ async function main ()
             messageTimeoutId: null,
             settingsElement,
             settingsForm,
+            settingsButton,
             mainColour: playerElement.dataset.mainColour,
             secondaryColour: playerElement.dataset.secondaryColour,
         };
@@ -339,8 +361,8 @@ async function main ()
             stepper.hidden = false;
         });
 
-        playerElement.querySelector('[data-component=settings-button]')
-            .addEventListener('click', handleSettingsShow);
+        settingsButton
+            .addEventListener('click', handleSettingsToggle);
 
         playerElement.querySelector('[name=name]')
             .addEventListener('change', handleNameChange);
@@ -352,8 +374,6 @@ async function main ()
             secondaryColourElement
                 .addEventListener('change', handleSecondaryColourChange);
         });
-        playerElement.querySelector('[name=done]')
-            ?.addEventListener('click', handleSettingsHide);
     });
 
     restoreCurrentGame();
