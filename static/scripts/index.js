@@ -294,35 +294,8 @@ async function requestScreenLock ()
     }
 }
 
-function chromiumBug1232956Workaround ()
-{
-    if (!window.matchMedia?.('(display-mode: fullscreen)').matches)
-    {
-        return;
-    }
-
-    const uaChromiumBrand = window?.navigator?.userAgentData.brands.find((b) => b.brand === 'Chromium');
-    if (!uaChromiumBrand)
-    {
-        return;
-    }
-
-    const chromiumVersion = Number(uaChromiumBrand.version);
-
-    if (chromiumVersion >= 93 && chromiumVersion < 95)
-    {
-        const userGestureHandler = () => {
-            document.body.requestFullscreen();
-        };
-
-        window.addEventListener('click', userGestureHandler, { once: true });
-    }
-}
-
 async function main ()
 {
-    chromiumBug1232956Workaround();
-
     requestScreenLock();
     document.addEventListener('visibilitychange', requestScreenLock);
 
