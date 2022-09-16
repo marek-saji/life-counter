@@ -265,6 +265,36 @@ function handleNameChange (event)
     nameElement.textContent = nameInput.value;
 }
 
+// TODO Remove once https://bugs.chromium.org/p/chromium/issues/detail?id=704070 is fixed
+function handlePossibleVirtualKeyboardVisibilityChange (event)
+{
+    if (
+        !window.matchMedia?.('(display-mode: fullscreen)').matches
+        || !window?.navigator?.userAgentData.brands.some((b) => b.brand === 'Chromium')
+        || window?.navigator?.userAgentData?.mobile !== true
+    )
+    {
+        return;
+    }
+
+    let workaroundNeeded = false
+
+    const { activeElement } = document
+    if (activeElement?.tagName === 'INPUT' && activeElement?.type === 'text')
+    {
+        workaroundNeeded = true
+    }
+
+    if (workaroundNeeded)
+    {
+        document.documentElement.setAttribute('data-need-chromium-704070-workaround', 'true')
+    }
+    else
+    {
+        document.documentElement.removeAttribute('data-need-chromium-704070-workaround')
+    }
+}
+
 function handleMainColourChange (event)
 {
     const playerElement = event.target.closest('[data-player]');
@@ -337,8 +367,11 @@ async function main ()
         settingsButton
             .addEventListener('click', handleSettingsToggle);
 
-        playerElement.querySelector('[name=name]')
-            .addEventListener('change', handleNameChange);
+        const nameInput = playerElement.querySelector('[name=name]');
+        nameInput.addEventListener('change', handleNameChange);
+        nameInput.addEventListener('focus', handlePossibleVirtualKeyboardVisibilityChange);
+        nameInput.addEventListener('blur', handlePossibleVirtualKeyboardVisibilityChange);
+        window.addEventListener('resize', handlePossibleVirtualKeyboardVisibilityChange);
         playerElement.querySelectorAll('[name=mainColour]').forEach((mainColourElement) => {
             mainColourElement
                 .addEventListener('change', handleMainColourChange);

@@ -134,6 +134,12 @@ input
     transition: background ease-in 200ms;
 }
 
+/* TODO Remove once https://bugs.chromium.org/p/chromium/issues/detail?id=704070 is fixed */
+html[data-need-chromium-704070-workaround] .o-Player:focus-within
+{
+    order: -1;
+}
+
 .o-Player[data-secondary-colour]:not([data-secondary-colour="undefined"])
 {
     /* Use gradient only if second colour is defined, because transition
