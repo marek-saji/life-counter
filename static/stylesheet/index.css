@@ -342,6 +342,7 @@ html[data-need-chromium-704070-workaround] .o-Player:focus-within
     flex: 0 0 auto;
     width: var(--button-size);
     height: var(--button-size);
+    padding: 0;
     font-size: calc(var(--scale) * 1em);
     line-height: 0.5; /* FIXME font–specific. Probably need to go with icons. */
     vertical-align: middle;
@@ -422,6 +423,8 @@ html[data-need-chromium-704070-workaround] .o-Player:focus-within
     height: 0;
     margin: 0;
     overflow: hidden;
+    appearance: none;
+    border: none;
 }
 
 .m-Options__icon
@@ -458,6 +461,7 @@ html[data-need-chromium-704070-workaround] .o-Player:focus-within
 {
     width: var(--action-button-size);
     height: var(--action-button-size);
+    padding: 0;
     line-height: 1;
     background-color: black;
     border-radius: 50%;
