@@ -58,6 +58,12 @@ html
     display: none !important;
 }
 
+button
+{
+    user-select: none;
+    -webkit-user-select: none;
+}
+
 body
 {
     height: 100%;
