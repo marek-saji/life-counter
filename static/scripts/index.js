@@ -94,6 +94,8 @@ function forceRepaint (element)
 
 function handleStepperClick (event)
 {
+    event.preventDefault();
+
     const stepper = event.target;
     const playerElement = stepper.closest('[data-player]');
     const player = players.get(playerElement.dataset.player);
