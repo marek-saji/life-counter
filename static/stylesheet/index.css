@@ -403,7 +403,7 @@ html[data-need-chromium-704070-workaround] .o-Player:focus-within
     display: flex;
     flex-wrap: wrap;
     justify-content: space-evenly;
-    font-size: 0.65em;
+    font-size: 0.6em;
     text-align: start;
     margin-inline: 0;
     padding-inline: 0;
