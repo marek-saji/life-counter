@@ -1,0 +1,141 @@
+lc-life
+{
+    --value-width: 3.5ch;
+    --button-size: 1.5ch;
+
+    container: lc-life / size;
+    overflow: hidden;
+}
+
+lc-life form
+{
+    display: flex;
+    flex-direction: column-reverse;
+    align-items: center;
+    justify-content: center;
+    font-size: var(--life-font-size);
+    padding-inline: 0.1em;
+}
+
+.m-Life__button
+{
+    display: inline-block;
+    flex: 0 0 auto;
+    vertical-align: middle;
+}
+
+.m-Life__button::before
+{
+    position: absolute;
+    z-index: var(--stepper-z-index);
+    inset: 0;
+    content: '';
+}
+
+.m-Life__button--decrease::before
+{
+    inset-block: 50% 0;
+}
+
+.m-Life__button--increase::before
+{
+    inset-block: 0 50%;
+}
+
+.m-Life__button--decrease
+{
+    order: -1;
+}
+
+.m-Life__button-icon
+{
+    display: block;
+    width: var(--button-size);
+    height: var(--button-size);
+    padding: 0;
+    font-size: 0.7em;
+    line-height: 0.7; /* FIXME font–specific. Probably need to go with icons. */
+    border: currentColor solid;
+    border-radius: 50%;
+    box-shadow: 0 0 0.125ch var(--shadow-colour);
+    transition: scale var(--transition-out);
+
+    .m-Life__button:hover &
+    {
+        scale: var(--active-grow);
+        transition: scale var(--transition-in);
+    }
+}
+
+.m-Life__value
+{
+    flex: 0 1 auto;
+    width: var(--value-width);
+    color: inherit;
+    font: inherit;
+    text-align: center;
+    background-color: transparent;
+    border: none;
+}
+
+.m-Life__value::-webkit-outer-spin-button,
+.m-Life__value::-webkit-inner-spin-button
+{
+    margin: 0;
+    -webkit-appearance: none;
+}
+
+@container lc-player (width > 10rem)
+{
+    lc-life form
+    {
+        flex-direction: row;
+    }
+
+    .m-Life__button--decrease::before
+    {
+        inset-block: 0;
+        inset-inline: 0 50%;
+    }
+
+    .m-Life__button--increase::before
+    {
+        inset-block: 0;
+        inset-inline: 50% 0;
+    }
+}
+
+lc-life output
+{
+    --offset-y: 0em;
+
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    z-index: 1;
+    max-width: 100%;
+    padding: 0.5em;
+    font-weight: bold;
+    font-family: sans-serif;
+    background-color: rgba(0, 0, 0, 0.7);
+    border-radius: 0.5em;
+    transform:
+        translateX(-50%)
+        translateY(calc(-0.75 * var(--life-font-size) + var(--offset-y)));
+    opacity: 1;
+    transition: var(--transition-in);
+    transition-property: opacity, transform;
+    pointer-events: none;
+
+    /* TODO When clicking multiple time, slide in multiple times */
+
+    &[hidden]
+    {
+        --offset-y: -1em;
+
+        display: block !important;
+        opacity: 0;
+        transition: var(--transition-out);
+        transition-property: opacity, transform;
+    }
+}

@@ -26,6 +26,18 @@
 
     --action-button-size: 1.5em;
     --life-font-size: 2.7em;
+    --button-hit-area-percentage: 0.25;
+    --active-grow: 1.1;
+
+    /* z-index */
+
+    --stepper-z-index: 2;
+    --settings-z-index: 3;
+
+    /* animation */
+
+    --transition-in: ease-in 100ms;
+    --transition-out: ease-in 50ms;
 }
 
 html
@@ -60,19 +72,15 @@ html
 
 button
 {
-    user-select: none;
+    cursor: pointer;
     -webkit-user-select: none;
+    user-select: none;
 }
 
 body
 {
     height: 100%;
     margin: 0;
-}
-
-button
-{
-    cursor: pointer;
 }
 
 input
@@ -150,13 +158,14 @@ input
 
 /* organism: Player */
 
-.o-Player
+lc-player
 {
     --gradient-width: 100%;
     --colour-a: red;
     --colour-b: var(--colour-a);
     --shadow-colour: transparent;
 
+    container: lc-player / size;
     position: relative;
     display: flex;
     flex-direction: column;
@@ -170,12 +179,12 @@ input
 }
 
 /* TODO Remove once https://bugs.chromium.org/p/chromium/issues/detail?id=704070 is fixed */
-html[data-need-chromium-704070-workaround] .o-Player:focus-within
+html[data-need-chromium-704070-workaround] lc-player:focus-within
 {
     order: -1;
 }
 
-.o-Player[data-secondary-colour]:not([data-secondary-colour="undefined"])
+lc-player[data-secondary-colour]:not([data-secondary-colour="undefined"])
 {
     /* Use gradient only if second colour is defined, because transition
      * doesn’t work for background-image (which gradient is) */
@@ -196,12 +205,12 @@ html[data-need-chromium-704070-workaround] .o-Player:focus-within
     transition: transform ease-in 200ms;
 }
 
-.o-Player--opponent
+lc-player[lc-opponent]
 {
     transform: rotate(180deg);
 }
 
-.o-Player--opponent [name="name"]:focus
+lc-player[lc-opponent] [name="name"]:focus
 {
     transform: rotate(180deg);
 }
@@ -233,17 +242,26 @@ html[data-need-chromium-704070-workaround] .o-Player:focus-within
 .o-Player__nameHeading
 {
     position: relative;
-    transition: transform ease-in-out 200ms;
     z-index: 1;
     display: inline-block;
     margin: 0;
-    padding-block: 0.25em;
     overflow: hidden;
+    padding-block: 0.25em;
+    scale: 1;
+    transition: scale ease-in-out 200ms;
 }
 
-.o-Player[data-chosen=true] .o-Player__nameHeading
+@keyframes o-Player__chosen
 {
-    transform: scale(2); /* FIXME Maybe o-Player background animation instead? */
+    70%
+    {
+        scale: 2;
+    }
+}
+
+lc-player[lc-chosen] .o-Player__nameHeading
+{
+    animation: 500ms ease-in-out 1 o-Player__chosen;
 }
 
 .o-Player__nameHeading::before,
@@ -275,18 +293,31 @@ html[data-need-chromium-704070-workaround] .o-Player:focus-within
 }
 
 .o-Player__openSettings
- {
+{
+    --hit-area: calc(var(--action-button-size) * var(--button-hit-area-percentage));
+
     position: absolute;
     top: 0;
     right: 0;
+    z-index: var(--settings-z-index);
     display: block;
-    width: var(--action-button-size);
-    height: var(--action-button-size);
-    line-height: var(--action-button-size);
-    overflow: hidden;
-    white-space: pre;
+    width: calc(var(--action-button-size) + var(--hit-area));
+    height: calc(var(--action-button-size) + var(--hit-area));
     margin: 0;
     padding: 0;
+    padding-inline-start: var(--hit-area);
+    padding-block-start: var(--hit-area);
+    overflow: hidden;
+    line-height: var(--action-button-size);
+    white-space: pre;
+    border-top-left-radius: 75%;
+    transition: scale var(--transition-out);
+
+    &:hover
+    {
+        scale: var(--active-grow);
+        transition: scale var(--transition-in);
+    }
 }
 
 @supports (height: 1dvh)
@@ -300,136 +331,20 @@ html[data-need-chromium-704070-workaround] .o-Player:focus-within
 
 .o-Player__openSettings::before
 {
-    content: '⚙️';
-    filter: brightness(0) contrast(0.8);
     opacity: 0.5;
+    filter: brightness(0) contrast(0.8);
     transition: opacity ease-out 200ms;
+    content: '⚙️';
 }
 
 .o-Player__openSettings[aria-selected="true"]::before
 {
-    content: '✔';
-    filter: none;
     opacity: 1;
+    filter: none;
     transition:
         opacity ease-out 200ms,
         filter ease-out 200ms;
-}
-
-.o-Player__message
-{
-    --offset-y: 0em;
-
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    z-index: 1;
-    max-width: 100%;
-    padding: 0.5em;
-    font-weight: bold;
-    font-family: sans-serif;
-    background-color: rgba(0, 0, 0, 0.7);
-    border-radius: 0.5em;
-    transform:
-        translateX(-50%)
-        translateY(calc(-0.75 * var(--life-font-size) + var(--offset-y)));
-    transition:
-        opacity ease-out 200ms,
-        transform ease-in 200ms;
-    pointer-events: none;
-}
-
-.o-Player__message[data-incoming=true]
-{
-    --offset-y: 0.25em;
-
-    transition: opacity ease-out 200ms;
-}
-
-.o-Player__message[hidden]
-{
-    display: block;
-    opacity: 0;
-}
-
-/* molecule: Life */
-
-.m-Life
-{
-    --value-width: 3.5ch;
-    --button-size: 1.5ch;
-
-    position: relative;
-    display: flex;
-    flex-direction: column-reverse;
-    align-items: center;
-    justify-content: center;
-    font-size: var(--life-font-size);
-    padding-inline: 0.1em;
-}
-
-.m-Life__button
-{
-    --scale: 0.7;
-
-    position: relative;
-    display: inline-block;
-    flex: 0 0 auto;
-    width: var(--button-size);
-    height: var(--button-size);
-    padding: 0;
-    font-size: calc(var(--scale) * 1em);
-    line-height: 0.5; /* FIXME font–specific. Probably need to go with icons. */
-    vertical-align: middle;
-    border: currentColor solid;
-    border-radius: 50%;
-    box-shadow: 0 0 0.125ch var(--shadow-colour);
-}
-
-.m-Life__button::before
-{
-    --height: calc(var(--button-size) + 1em / var(--scale));
-    --width: calc(var(--button-size) + var(--value-width));
-
-    position: absolute;
-    top: calc(50% - var(--height) / 2);
-    left: calc(50% - var(--width) / 2);
-    width: var(--width);
-    height: var(--height);
-    content: '';
-}
-
-.m-Life__button--decrease
-{
-    order: -1;
-}
-
-.m-Life__value
-{
-    flex: 0 1 auto;
-    width: var(--value-width);
-    color: inherit;
-    font: inherit;
-    text-align: center;
-    background-color: transparent;
-    border: none;
-    -moz-appearance: textfield;
-}
-
-.m-Life__value::-webkit-outer-spin-button,
-.m-Life__value::-webkit-inner-spin-button
-{
-    margin: 0;
-    -webkit-appearance: none;
-}
-
-@media (min-aspect-ratio: 2/5)
-{
-    .m-Life
-    {
-        flex-direction: row;
-        flex-wrap: wrap;
-    }
+    content: '✔';
 }
 
 /* molecule: Options */
@@ -458,8 +373,8 @@ html[data-need-chromium-704070-workaround] .o-Player:focus-within
     height: 0;
     margin: 0;
     overflow: hidden;
-    appearance: none;
     border: none;
+    appearance: none;
 }
 
 .m-Options__icon
@@ -494,6 +409,7 @@ html[data-need-chromium-704070-workaround] .o-Player:focus-within
 
 .a-Action
 {
+    position: relative;
     width: var(--action-button-size);
     height: var(--action-button-size);
     padding: 0;
@@ -503,4 +419,19 @@ html[data-need-chromium-704070-workaround] .o-Player:focus-within
     box-shadow:
         0 0.5em 1.5em rgba(0, 0, 0, 0.19),
         0 0.25em 0.25em rgba(0, 0, 0, 0.23);
+    transition: scale var(--transition-out);
+
+    &:hover
+    {
+        scale: var(--active-grow);
+        transition: scale var(--transition-in);
+    }
+
+    &::before
+    {
+        position: absolute;
+        border-radius: 50%;
+        content: '';
+        inset: calc(-1 * var(--button-hit-area-percentage) * 100%);
+    }
 }

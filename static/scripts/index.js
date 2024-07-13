@@ -1,8 +1,6 @@
 const players = new Map();
 
 const STARTING_LIFE = 20;
-// FIXME Hang longer for accessibility?
-const MESSAGE_HANG_TIME_MS = 2000;
 
 const globalMessageElement = document.querySelector('[data-component=global-message]');
 
@@ -34,7 +32,7 @@ async function deserialiseGame (state)
             item.secondaryColour || player.secondaryColour;
 
         player.nameElement.textContent = player.name;
-        player.lifeElement.textContent = player.life;
+        player.lifeElement.value = player.life;
         player.playerElement.dataset.dead = player.life <= 0 ? 'true' : 'false';
         player.playerElement.dataset.mainColour = player.mainColour;
         player.playerElement.dataset.secondaryColour =
@@ -88,67 +86,14 @@ async function pushGame ()
     setItem('history', history);
 }
 
-function forceRepaint (element)
-{
-    // eslint-disable-next-line no-unused-expressions
-    element.offsetHeight;
-}
-
-function handleStepperClick (event)
-{
-    event.preventDefault();
-
-    const stepper = event.target;
-    const playerElement = stepper.closest('[data-player]');
-    const player = players.get(playerElement.dataset.player);
-    const step = parseInt(stepper.dataset.step, 10);
-
-    player.life += step;
-    player.lifeElement.textContent = player.life;
-
-    playerElement.dataset.dead = player.life <= 0 ? 'true' : 'false';
-
-    const change =
-        parseInt(player.messageElement.dataset.change || 0, 10) + step;
-    player.messageElement.dataset.change = change;
-    player.messageElement.hidden = false;
-    player.messageElement.textContent = change > 0 ? `+${change}` : change;
-    player.messageElement.dataset.incoming = 'true';
-    forceRepaint(player.messageElement);
-    player.messageElement.dataset.incoming = 'false';
-    clearTimeout(player.messageTimeoutId);
-    player.messageTimeoutId = setTimeout(
-        () => {
-            player.messageElement.dataset.change = 0;
-            player.messageElement.hidden = true;
-        },
-        MESSAGE_HANG_TIME_MS,
-    );
-
-    saveCurrentGame();
-}
-
-function handleStepperFocus (event)
-{
-    const stepper = event.target;
-    const playerElement = stepper.closest('[data-player]');
-
-    playerElement.dataset.buttonFocusWithin = 'true';
-    stepper.addEventListener('blur', () => {
-        delete playerElement.dataset.buttonFocusWithin;
-    }, { once: true });
-}
-
 function resetPlayers ()
 {
     players.forEach((player) => {
         /* eslint-disable no-param-reassign */
         player.life = STARTING_LIFE;
-        player.lifeElement.textContent = player.life;
+        player.lifeElement.value = player.life;
         player.playerElement.dataset.dead = 'false';
         player.name = player.nameElement.textContent;
-        player.messageElement.hidden = true;
-        player.messageElement.dataset.change = '0';
         clearTimeout(player.messageTimeoutId);
         /* eslint-enable no-param-reassign */
     });
@@ -156,21 +101,23 @@ function resetPlayers ()
 
 function drawPlayer ()
 {
-    const deadPlayersIds = Array.from(players.entries())
-        .filter(([, player]) => player.life <= 0)
-        .map(([id]) => id);
-    const playerIds =
-        deadPlayersIds.length
-            ? deadPlayersIds
-            : Array.from(players.keys());
-    const playerId =
-        playerIds[Math.floor(Math.random() * playerIds.length)];
-    const player = players.get(playerId);
+    const deadPlayers = Array.from(players.values())
+        .filter((player) => player.life <= 0);
+    const candidates =
+        deadPlayers.length
+            ? deadPlayers
+            : Array.from(players.values());
+    const chosenPlayer =
+        candidates[Math.floor(Math.random() * candidates.length)];
 
-    player.playerElement.dataset.chosen = 'true';
-    setTimeout(() => { // FIXME Find a better way
-        player.playerElement.dataset.chosen = 'false';
-    }, 500);
+    players.values().forEach(({ playerElement }) => {
+        playerElement.removeAttribute('lc-chosen');
+    });
+
+    // force layout redraw
+    chosenPlayer.playerElement.getBoundingClientRect();
+
+    chosenPlayer.playerElement.setAttribute('lc-chosen', 'true');
 }
 
 function toggleSettings (playerId, visible)
@@ -182,28 +129,11 @@ function toggleSettings (playerId, visible)
         settingsButton,
     } = players.get(playerId);
 
+    // TODO document.startViewTransition
     nameElement.parentNode.hidden = visible;
-    lifeElement.parentNode.hidden = visible;
+    lifeElement.hidden = visible;
     settingsElement.hidden = !visible;
-    settingsButton.setAttribute('aria-selected', visible ? 'true' : 'false')
-}
-
-function handleSettingsToggle (event)
-{
-    event.preventDefault();
-
-    const playerElement = event.target.closest('[data-player]');
-    const playerId = playerElement.dataset.player;
-    const { settingsElement } = players.get(playerId);
-
-    if (settingsElement.hidden)
-    {
-        handleSettingsShow(event);
-    }
-    else
-    {
-        handleSettingsHide(event);
-    }
+    settingsButton.setAttribute('aria-selected', visible ? 'true' : 'false');
 }
 
 function handleSettingsShow (event)
@@ -253,6 +183,24 @@ function handleSettingsHide (event)
     toggleSettings(playerId, false);
 }
 
+function handleSettingsToggle (event)
+{
+    event.preventDefault();
+
+    const playerElement = event.target.closest('[data-player]');
+    const playerId = playerElement.dataset.player;
+    const { settingsElement } = players.get(playerId);
+
+    if (settingsElement.hidden)
+    {
+        handleSettingsShow(event);
+    }
+    else
+    {
+        handleSettingsHide(event);
+    }
+}
+
 function handleNameChange (event)
 {
     const playerElement = event.target.closest('[data-player]');
@@ -270,7 +218,7 @@ function handleNameChange (event)
 }
 
 // TODO Remove once https://bugs.chromium.org/p/chromium/issues/detail?id=704070 is fixed
-function handlePossibleVirtualKeyboardVisibilityChange (event)
+function handlePossibleVirtualKeyboardVisibilityChange (_event)
 {
     if (
         !window.matchMedia?.('(display-mode: fullscreen)').matches
@@ -281,28 +229,27 @@ function handlePossibleVirtualKeyboardVisibilityChange (event)
         return;
     }
 
-    let workaroundNeeded = false
+    let workaroundNeeded = false;
 
-    const { activeElement } = document
+    const { activeElement } = document;
     if (activeElement?.tagName === 'INPUT' && activeElement?.type === 'text')
     {
-        workaroundNeeded = true
+        workaroundNeeded = true;
     }
 
     if (workaroundNeeded)
     {
-        document.documentElement.setAttribute('data-need-chromium-704070-workaround', 'true')
+        document.documentElement.setAttribute('data-need-chromium-704070-workaround', 'true');
     }
     else
     {
-        document.documentElement.removeAttribute('data-need-chromium-704070-workaround')
+        document.documentElement.removeAttribute('data-need-chromium-704070-workaround');
     }
 }
 
 function handleMainColourChange (event)
 {
     const playerElement = event.target.closest('[data-player]');
-    // eslint-disable-next-line no-param-reassign
     playerElement.dataset.mainColour = event.target.value;
 
     if (playerElement.dataset.player === '2')
@@ -315,11 +262,11 @@ function handleMainColourChange (event)
 function handleSecondaryColourChange (event)
 {
     const playerElement = event.target.closest('[data-player]');
-    // eslint-disable-next-line no-param-reassign
     playerElement.dataset.secondaryColour = event.target.value;
 }
 
-async function requestNativeScreenLock () {
+async function requestNativeScreenLock ()
+{
     document.addEventListener('visibilitychange', async () => {
         if (document.visibilityState === 'visible')
         {
@@ -354,10 +301,13 @@ async function requestPolyfilledScreenLock ()
         // NoSleep plays an invisible video to keep the screen awake. In
         // most browsers playing video requires user interaction, so
         // first .enable() will most probably fail.
-        try {
+        try
+        {
             await noSleep.enable();
-        } catch (error) {
-            globalMessageElement.textContent =  `Tap to keep the screen awake`;
+        }
+        catch (error)
+        {
+            globalMessageElement.textContent = 'Tap to keep the screen awake';
             globalMessageElement.hidden = false;
 
             document.addEventListener('click', async function requestScreenLockOnce () {
@@ -366,7 +316,7 @@ async function requestPolyfilledScreenLock ()
                 globalMessageElement.dataset.outgoing = 'true';
                 globalMessageElement.addEventListener('transitionend', () => {
                     globalMessageElement.hidden = true;
-                })
+                });
             });
         }
     }
@@ -395,8 +345,7 @@ async function main ()
 
     document.querySelectorAll('[data-player]').forEach((playerElement) => {
         const nameElement = playerElement.querySelector('[data-component=name]');
-        const lifeElement = playerElement.querySelector('[data-component=life]');
-        const messageElement = playerElement.querySelector('[data-component=message]');
+        const lifeElement = playerElement.querySelector('lc-life');
         const settingsElement = playerElement.querySelector('[data-component=settings]');
         const settingsForm = settingsElement.querySelector('form');
         const settingsButton = playerElement.querySelector('[data-component=settings-button]');
@@ -406,7 +355,6 @@ async function main ()
             name: nameElement.textContent,
             lifeElement,
             nameElement,
-            messageElement,
             messageTimeoutId: null,
             settingsElement,
             settingsForm,
@@ -416,15 +364,15 @@ async function main ()
         };
         players.set(playerElement.dataset.player, data);
 
-        playerElement.querySelectorAll('[data-step]').forEach((stepper) => {
-            stepper.addEventListener('focus', handleStepperFocus);
-            stepper.addEventListener('click', handleStepperClick);
-            // eslint-disable-next-line no-param-reassign
-            stepper.hidden = false;
-        });
-
         settingsButton
             .addEventListener('click', handleSettingsToggle);
+
+        lifeElement.addEventListener('change', ({ target: { value } }) => {
+            data.life = value;
+            // eslint-disable-next-line no-param-reassign
+            playerElement.dataset.dead = value <= 0 ? 'true' : 'false';
+            saveCurrentGame();
+        });
 
         const nameInput = playerElement.querySelector('[name=name]');
         nameInput.addEventListener('change', handleNameChange);
@@ -453,6 +401,9 @@ async function main ()
             await pushGame();
         }
 
+        Array.from(players.keys()).forEach((playerId) => {
+            toggleSettings(playerId, false);
+        });
         drawPlayer();
         resetPlayers();
 
