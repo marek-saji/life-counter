@@ -2,14 +2,14 @@ import html from '../../html.mjs';
 
 class LcLife extends HTMLElement
 {
-    static observedAttributes = ['value'];
-
-    static #DEFAULT_VALUE = 0;
+    static observedAttributes = [
+        'value',
+    ];
 
     static #CHANGE_VISIBLE_TIME_MS = 2_000;
 
     /** @type {number} */
-    #value;
+    #value = 0;
 
     /** @type {number} */
     #changeValue = 0;
@@ -21,10 +21,10 @@ class LcLife extends HTMLElement
     {
         super();
 
-        this.value =
-            this.hasAttribute('value')
-                ? this.getAttribute('value')
-                : LcLife.#DEFAULT_VALUE;
+        if (this.hasAttribute('value'))
+        {
+            this.value = this.getAttribute('value');
+        }
     }
 
     connectedCallback ()
@@ -126,12 +126,12 @@ class LcLife extends HTMLElement
     /**
      * @param {string|number} value
      */
-    set value (value)
+    set value (newValue)
     {
-        const numberValue = Number(value);
+        const numberValue = Number(newValue);
         if (!Number.isInteger(numberValue))
         {
-            throw new TypeError('Value passed to lc-life MUST be an integer.');
+            throw new TypeError(`lc-life[value] MUST be an integer. Got: ${newValue}.`);
         }
 
         const oldValue = this.#value;
