@@ -1,0 +1,124 @@
+lc-settings [name="name"]:focus
+{
+    transform: rotate(calc(360deg - var(--rotation)));
+}
+
+.o-Player__openSettings
+{
+    --hit-area: calc(var(--action-button-size) * var(--button-hit-area-percentage));
+
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: var(--settings-z-index);
+    display: block;
+    width: calc(var(--action-button-size) + var(--hit-area));
+    height: calc(var(--action-button-size) + var(--hit-area));
+    margin: 0;
+    padding: 0;
+    padding-inline-start: var(--hit-area);
+    padding-block-start: var(--hit-area);
+    overflow: hidden;
+    line-height: var(--action-button-size);
+    white-space: pre;
+    border-top-left-radius: 75%;
+    transition: scale var(--transition-out);
+
+    &:hover
+    {
+        scale: var(--active-grow);
+        transition: scale var(--transition-in);
+    }
+}
+
+@supports (height: 1dvh)
+{
+    .o-Player__openSettings
+    {
+        top: auto;
+        bottom: 0;
+    }
+}
+
+.o-Player__openSettings::before
+{
+    opacity: 0.5;
+    filter: brightness(0) contrast(0.8);
+    transition: opacity ease-out 200ms;
+    content: '⚙️';
+}
+
+.o-Player__openSettings[aria-selected="true"]::before
+{
+    opacity: 1;
+    filter: none;
+    transition:
+        opacity ease-out 200ms,
+        filter ease-out 200ms;
+    content: '✔';
+}
+
+.o-Settings
+{
+    position: absolute;
+    inset: 0;
+    background-color: var(--colour-a);
+}
+
+/* molecule: Options */
+
+.m-Options
+ {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    font-size: 0.6em;
+    text-align: start;
+    margin-inline: 0;
+    padding-inline: 0;
+}
+
+.m-Options__item
+{
+    display: inline-block;
+    margin: 0;
+}
+
+.m-Options__checkbox,
+.m-Options__label
+{
+    width: 0;
+    height: 0;
+    margin: 0;
+    overflow: hidden;
+    border: none;
+    appearance: none;
+}
+
+.m-Options__icon
+{
+    --size: 2em;
+
+    display: inline-block;
+    width: var(--size);
+    height: var(--size);
+    line-height: var(--size);
+    text-align: center;
+    border: transparent solid thin;
+    border-radius: 25%;
+    filter: grayscale();
+}
+
+.m-Options__label
+{
+    display: inline-block;
+    width: 0;
+    height: 0;
+    overflow: hidden;
+}
+
+:checked + .m-Options__icon
+{
+    border-color: currentColor;
+    filter: none;
+}

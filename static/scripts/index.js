@@ -132,7 +132,15 @@ function toggleSettings (playerId, visible)
     // TODO document.startViewTransition
     nameElement.parentNode.hidden = visible;
     lifeElement.hidden = visible;
-    settingsElement.hidden = !visible;
+    if (visible)
+    {
+        settingsElement.show();
+        settingsElement.focus();
+    }
+    else
+    {
+        settingsElement.close();
+    }
     settingsButton.setAttribute('aria-selected', visible ? 'true' : 'false');
 }
 
@@ -191,13 +199,13 @@ function handleSettingsToggle (event)
     const playerId = playerElement.dataset.player;
     const { settingsElement } = players.get(playerId);
 
-    if (settingsElement.hidden)
+    if (settingsElement.open)
     {
-        handleSettingsShow(event);
+        handleSettingsHide(event);
     }
     else
     {
-        handleSettingsHide(event);
+        handleSettingsShow(event);
     }
 }
 

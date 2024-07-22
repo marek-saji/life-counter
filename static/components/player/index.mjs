@@ -58,65 +58,7 @@ class LcPlayer extends HTMLElement
 
                 <lc-life value="20"></lc-life>
 
-                <button type=button class="o-Player__openSettings" data-component=settings-button>
-                    Settings
-                </button>
-
-                <section class="o-Settings" aria-label="Settings" hidden data-component="settings">
-                    <form>
-                        <input
-                            name=name
-                            type=text
-                            data-1p-ignore
-                            data-lpignore="true"
-                        >
-
-                        <fieldset class="m-Options">
-                            <p class="m-Options__item">
-                                <label for=mainColour_white-${this.id}>
-                                    <input id=mainColour_white-${this.id} name="mainColour" type=radio value="white" class="m-Options__checkbox">
-                                    <span class="m-Options__icon">☀️</span>
-                                    <span class="m-Options__label">White</span>
-                                </label>
-                            </p>
-                            <p class="m-Options__item">
-                                <label for=mainColour_blue-${this.id}>
-                                    <input id=mainColour_blue-${this.id} name="mainColour" type=radio value="blue" class="m-Options__checkbox">
-                                    <span class="m-Options__icon">💧</span>
-                                    <span class="m-Options__label">Blue</span>
-                                </label>
-                            </p>
-                            <p class="m-Options__item">
-                                <label for=mainColour_black-${this.id}>
-                                    <input id=mainColour_black-${this.id} name="mainColour" type=radio value="black" class="m-Options__checkbox">
-                                    <span class="m-Options__icon">💀</span>
-                                    <span class="m-Options__label">Black</span>
-                                </label>
-                            </p>
-                            <p class="m-Options__item">
-                                <label for=mainColour_red-${this.id}>
-                                    <input id=mainColour_red-${this.id} name="mainColour" type=radio value="red" class="m-Options__checkbox" checked>
-                                    <span class="m-Options__icon">🔥</span>
-                                    <span class="m-Options__label">Red</span>
-                                </label>
-                            </p>
-                            <p class="m-Options__item">
-                                <label for=mainColour_green-${this.id}>
-                                    <input id=mainColour_green-${this.id} name="mainColour" type=radio value="green" class="m-Options__checkbox">
-                                    <span class="m-Options__icon">🌳</span>
-                                    <span class="m-Options__label">Green</span>
-                                </label>
-                            </p>
-                            <p class="m-Options__item">
-                                <label for=mainColour_grey-${this.id}>
-                                    <input id=mainColour_grey-${this.id} name="mainColour" type=radio value="grey" class="m-Options__checkbox">
-                                    <span class="m-Options__icon">🤖</span>
-                                    <span class="m-Options__label">Colourless</span>
-                                </label>
-                            </p>
-                        </fieldset>
-                    </form>
-                </section>
+                <lc-settings></lc-settings>
             </div>
         `;
 
@@ -146,17 +88,19 @@ class LcPlayer extends HTMLElement
     {
         this.#playerName = String(newValue);
 
+        // Update DOM
+
         const nameElement = this.querySelector('[data-component=name]');
         if (nameElement)
         {
-            nameElement.dataset.default = this.playerName;
-            nameElement.textContent = this.playerName;
+            nameElement.dataset.default = this.#playerName;
+            nameElement.textContent = this.#playerName;
         }
 
-        const nameInput = this.querySelector('[name=name]');
-        if (nameInput)
+        const settingsElement = this.querySelector('lc-settings');
+        if (settingsElement)
         {
-            nameInput.value = this.playerName;
+            settingsElement.playerName = this.#playerName;
         }
     }
 
@@ -175,11 +119,14 @@ class LcPlayer extends HTMLElement
         }
         this.#playerColour = colourName;
 
-        this.dataset.mainColour = this.playerColour;
-        const selectedColourInput = this.querySelector(`[name=mainColour][value=${this.#playerColour}]`);
-        if (selectedColourInput)
+        // Update DOM
+
+        this.dataset.mainColour = this.#playerColour;
+
+        const settingsElement = this.querySelector('lc-settings');
+        if (settingsElement)
         {
-            selectedColourInput.checked = true;
+            settingsElement.playerColour = this.#playerColour;
         }
     }
 
@@ -205,7 +152,15 @@ class LcPlayer extends HTMLElement
 
         this.#panelRotation = clampedValue;
 
+        // Update DOM
+
         this.style.setProperty('--rotation', `${this.#panelRotation}deg`);
+
+        const settingsElement = this.querySelector('lc-settings');
+        if (settingsElement)
+        {
+            settingsElement.panelRotation = this.#panelRotation;
+        }
     }
 }
 
