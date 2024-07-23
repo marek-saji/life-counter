@@ -1,6 +1,7 @@
 lc-player
 {
     --rotation: 180deg;
+    --writing-mode: horizontal-tb;
 
     display: contents;
 }
@@ -25,32 +26,33 @@ lc-player
     background: var(--colour-a);
     outline: var(--colour-section-separator) solid 1px;
     transform: rotate(var(--rotation));
+    writing-mode: var(--writing-mode);
     transition: background ease-in 200ms;
+
+    &[data-main-colour=red] { --colour-a: var(--colour-red-bg); }
+    &[data-secondary-colour=red] { --colour-b: var(--colour-red-bg); }
+
+    &[data-main-colour=green] { --colour-a: var(--colour-green-bg); }
+    &[data-secondary-colour=green] { --colour-b: var(--colour-green-bg); }
+
+    &[data-main-colour=blue] { --colour-a: var(--colour-blue-bg); }
+    &[data-secondary-colour=blue] { --colour-b: var(--colour-blue-bg); }
+
+    &[data-main-colour=white] { --colour-a: var(--colour-white-bg); }
+    &[data-secondary-colour=white] { --colour-b: var(--colour-white-bg); }
+
+    &[data-main-colour=white],
+    &[data-secondary-colour=white]
+    {
+        --shadow-colour: var(--colour-dark-fg);
+    }
+
+    &[data-main-colour=black] { --colour-a: var(--colour-black-bg); }
+    &[data-secondary-colour=black] { --colour-b: var(--colour-black-bg); }
+
+    &[data-main-colour=grey] { --colour-a: var(--colour-grey-bg); }
+    &[data-secondary-colour=grey] { --colour-a: var(--colour-grey-bg); }
 }
-
-[data-main-colour=red] { --colour-a: var(--colour-red-bg); }
-[data-secondary-colour=red] { --colour-b: var(--colour-red-bg); }
-
-[data-main-colour=green] { --colour-a: var(--colour-green-bg); }
-[data-secondary-colour=green] { --colour-b: var(--colour-green-bg); }
-
-[data-main-colour=blue] { --colour-a: var(--colour-blue-bg); }
-[data-secondary-colour=blue] { --colour-b: var(--colour-blue-bg); }
-
-[data-main-colour=white] { --colour-a: var(--colour-white-bg); }
-[data-secondary-colour=white] { --colour-b: var(--colour-white-bg); }
-
-[data-main-colour=white],
-[data-secondary-colour=white]
-{
-    --shadow-colour: var(--colour-dark-fg);
-}
-
-[data-main-colour=black] { --colour-a: var(--colour-black-bg); }
-[data-secondary-colour=black] { --colour-b: var(--colour-black-bg); }
-
-[data-main-colour=grey] { --colour-a: var(--colour-grey-bg); }
-[data-secondary-colour=grey] { --colour-a: var(--colour-grey-bg); }
 
 /* TODO Remove once https://bugs.chromium.org/p/chromium/issues/detail?id=704070 is fixed */
 html[data-need-chromium-704070-workaround] .o-Player:focus-within
@@ -77,6 +79,11 @@ html[data-need-chromium-704070-workaround] .o-Player:focus-within
 .o-Player__content
 {
     transition: transform ease-in 200ms;
+}
+
+.o-Player__content:has(> lc-settings[open]) > :not(lc-settings)
+{
+    display: none;
 }
 
 .o-Player__nameHeading

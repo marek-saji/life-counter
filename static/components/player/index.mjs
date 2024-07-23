@@ -4,6 +4,7 @@ class LcPlayer extends HTMLElement
 {
     static #attributeToPropMap = {
         'player-name': 'playerName',
+        'player-life': 'playerLife',
         'player-colour': 'playerColour',
         'panel-rotation': 'panelRotation',
     };
@@ -24,6 +25,9 @@ class LcPlayer extends HTMLElement
 
     /** @type {string} */
     #playerName = 'Player';
+
+    /** @type {number} */
+    #playerLife = 20;
 
     /** @type {(typeof LcPlayer.##COLOURS)[number]} */
     #playerColour = 'black';
@@ -47,7 +51,11 @@ class LcPlayer extends HTMLElement
 
     connectedCallback ()
     {
-        this.dataset.player = this.id;
+        if (!this.id)
+        {
+            throw new TypeError('lc-player MUST have an id.');
+        }
+
         this.classList.add('o-Player');
 
         this.innerHTML = html`
@@ -58,7 +66,7 @@ class LcPlayer extends HTMLElement
 
                 <lc-life value="20"></lc-life>
 
-                <lc-settings></lc-settings>
+                <lc-settings player-id=${this.id}></lc-settings>
             </div>
         `;
 
@@ -93,7 +101,6 @@ class LcPlayer extends HTMLElement
         const nameElement = this.querySelector('[data-component=name]');
         if (nameElement)
         {
-            nameElement.dataset.default = this.#playerName;
             nameElement.textContent = this.#playerName;
         }
 
@@ -101,6 +108,28 @@ class LcPlayer extends HTMLElement
         if (settingsElement)
         {
             settingsElement.playerName = this.#playerName;
+        }
+    }
+
+    get playerLife ()
+    {
+        return this.#playerLife;
+    }
+
+    set playerLife (newValue)
+    {
+        const numberValue = Number(newValue);
+        if (!Number.isInteger(numberValue))
+        {
+            throw new TypeError(`lc-player[player-life] MUST be an integer. Got: ${newValue}.`);
+        }
+
+        this.#playerLife = numberValue;
+
+        const lifeElement = this.querySelector('lc-life');
+        if (lifeElement)
+        {
+            lifeElement.value = this.#playerLife;
         }
     }
 
@@ -154,7 +183,30 @@ class LcPlayer extends HTMLElement
 
         // Update DOM
 
-        this.style.setProperty('--rotation', `${this.#panelRotation}deg`);
+        switch (this.#panelRotation)
+        {
+            case 0: {
+                this.style.setProperty('--rotation', '0deg');
+                this.style.setProperty('--writing-mode', 'horizontal-tb');
+                break;
+            }
+            case 90: {
+                this.style.setProperty('--rotation', '0deg');
+                this.style.setProperty('--writing-mode', 'vertical-rl');
+                break;
+            }
+            case 180: {
+                this.style.setProperty('--rotation', '180deg');
+                this.style.setProperty('--writing-mode', 'horizontal-tb');
+                break;
+            }
+            case 270: {
+                this.style.setProperty('--rotation', '180deg');
+                this.style.setProperty('--writing-mode', 'vertical-rl');
+                break;
+            }
+            default:
+        }
 
         const settingsElement = this.querySelector('lc-settings');
         if (settingsElement)

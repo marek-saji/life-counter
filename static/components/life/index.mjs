@@ -41,6 +41,7 @@ class LcLife extends HTMLElement
                 <input
                     class="m-Life__value"
                     type="number"
+                    name="life"
                     value="${this.value}"
                 />
                 <button

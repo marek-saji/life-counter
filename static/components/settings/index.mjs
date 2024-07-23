@@ -3,13 +3,13 @@ import html from '../../html.mjs';
 class LcSettings extends HTMLElement
 {
     static #attributeToPropMap = {
+        'player-id': 'playerId',
         'player-name': 'playerName',
         'player-colour': 'playerColour',
         'panel-rotation': 'panelRotation',
     };
 
     static observedAttributes = [
-        'id',
         ...Object.keys(LcSettings.#attributeToPropMap),
     ];
 
@@ -21,6 +21,9 @@ class LcSettings extends HTMLElement
         'green',
         'grey',
     ]);
+
+    /** @type {string} */
+    #playerId;
 
     /** @type {string} */
     #playerName = 'Player';
@@ -47,12 +50,17 @@ class LcSettings extends HTMLElement
 
     connectedCallback ()
     {
+        if (!this.playerId)
+        {
+            throw new TypeError('lc-settings MUST have a player-id.');
+        }
+
         this.innerHTML = html`
             <button type=button class="o-Player__openSettings" data-component=settings-button>
                 Settings
             </button>
 
-            <dialog class="o-Settings" aria-label="Settings" data-component="settings">
+            <dialog class="o-Settings" aria-label="Settings">
                 <form>
                     <input
                         name=name
@@ -63,43 +71,43 @@ class LcSettings extends HTMLElement
 
                     <fieldset class="m-Options">
                         <p class="m-Options__item">
-                            <label for=mainColour_white-${this.id}>
-                                <input id=mainColour_white-${this.id} name="mainColour" type=radio value="white" class="m-Options__checkbox">
+                            <label for=mainColour_white-${this.playerId}>
+                                <input id=mainColour_white-${this.playerId} name="mainColour" type=radio value="white" class="m-Options__checkbox">
                                 <span class="m-Options__icon">☀️</span>
                                 <span class="m-Options__label">White</span>
                             </label>
                         </p>
                         <p class="m-Options__item">
-                            <label for=mainColour_blue-${this.id}>
-                                <input id=mainColour_blue-${this.id} name="mainColour" type=radio value="blue" class="m-Options__checkbox">
+                            <label for=mainColour_blue-${this.playerId}>
+                                <input id=mainColour_blue-${this.playerId} name="mainColour" type=radio value="blue" class="m-Options__checkbox">
                                 <span class="m-Options__icon">💧</span>
                                 <span class="m-Options__label">Blue</span>
                             </label>
                         </p>
                         <p class="m-Options__item">
-                            <label for=mainColour_black-${this.id}>
-                                <input id=mainColour_black-${this.id} name="mainColour" type=radio value="black" class="m-Options__checkbox">
+                            <label for=mainColour_black-${this.playerId}>
+                                <input id=mainColour_black-${this.playerId} name="mainColour" type=radio value="black" class="m-Options__checkbox">
                                 <span class="m-Options__icon">💀</span>
                                 <span class="m-Options__label">Black</span>
                             </label>
                         </p>
                         <p class="m-Options__item">
-                            <label for=mainColour_red-${this.id}>
-                                <input id=mainColour_red-${this.id} name="mainColour" type=radio value="red" class="m-Options__checkbox" checked>
+                            <label for=mainColour_red-${this.playerId}>
+                                <input id=mainColour_red-${this.playerId} name="mainColour" type=radio value="red" class="m-Options__checkbox" checked>
                                 <span class="m-Options__icon">🔥</span>
                                 <span class="m-Options__label">Red</span>
                             </label>
                         </p>
                         <p class="m-Options__item">
-                            <label for=mainColour_green-${this.id}>
-                                <input id=mainColour_green-${this.id} name="mainColour" type=radio value="green" class="m-Options__checkbox">
+                            <label for=mainColour_green-${this.playerId}>
+                                <input id=mainColour_green-${this.playerId} name="mainColour" type=radio value="green" class="m-Options__checkbox">
                                 <span class="m-Options__icon">🌳</span>
                                 <span class="m-Options__label">Green</span>
                             </label>
                         </p>
                         <p class="m-Options__item">
-                            <label for=mainColour_grey-${this.id}>
-                                <input id=mainColour_grey-${this.id} name="mainColour" type=radio value="grey" class="m-Options__checkbox">
+                            <label for=mainColour_grey-${this.playerId}>
+                                <input id=mainColour_grey-${this.playerId} name="mainColour" type=radio value="grey" class="m-Options__checkbox">
                                 <span class="m-Options__icon">🤖</span>
                                 <span class="m-Options__label">Colourless</span>
                             </label>
@@ -108,6 +116,12 @@ class LcSettings extends HTMLElement
                 </form>
             </dialog>
         `;
+
+        this.addEventListener('click', this);
+        this.addEventListener('change', this);
+        this.addEventListener('focus', this);
+        this.addEventListener('blur', this);
+        window.addEventListener('resize', this);
 
         // Re–set properties will update stuff in the DOM
         Object.values(LcSettings.#attributeToPropMap)
@@ -124,6 +138,80 @@ class LcSettings extends HTMLElement
             const prop = LcSettings.#attributeToPropMap[attr];
             this[prop] = newValue;
         }
+    }
+
+    handleEvent (event)
+    {
+        if (event.target !== this)
+        {
+            ({
+                click: this.handleClickEvent,
+                change: this.handleChangeEvent,
+                submit: this.handleSubmitEvent,
+                focus: this.handleFocusEvent,
+                blur: this.handleBlurEvent,
+                resize: this.handleResieEvent,
+            })[event.type]?.call(this, event);
+        }
+    }
+
+    /**
+     * @param {PointerEvent} event
+     */
+    handleClickEvent (event)
+    {
+        if (event.target.dataset.component === 'settings-button')
+        {
+            this.toggle();
+        }
+    }
+
+    toggle ()
+    {
+        const dialog = this.querySelector('dialog');
+
+        if (dialog.open)
+        {
+            this.close();
+        }
+        else
+        {
+            this.show();
+        }
+    }
+
+    show ()
+    {
+        const dialog = this.querySelector('dialog');
+        const button = this.querySelector('[data-component=settings-button]');
+
+        button.setAttribute('aria-selected', 'true');
+        dialog.show();
+        dialog.focus();
+
+        this.setAttribute('open', 'open');
+    }
+
+    close ()
+    {
+        const dialog = this.querySelector('dialog');
+        const button = this.querySelector('[data-component=settings-button]');
+
+        button.setAttribute('aria-selected', 'false');
+        dialog.close();
+
+        this.removeAttribute('open');
+    }
+
+    get playerId ()
+    {
+        return this.#playerId;
+    }
+
+    /** @param {string} */
+    set playerId (newValue)
+    {
+        this.#playerId = String(newValue);
     }
 
     get playerName ()
