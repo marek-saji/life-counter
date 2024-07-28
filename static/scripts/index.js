@@ -3,8 +3,6 @@ window.players = players;
 
 const STARTING_LIFE = 20;
 
-const globalMessageElement = document.querySelector('[data-component=global-message]');
-
 async function serialiseGame ()
 {
     return {
@@ -156,79 +154,8 @@ function handlePossibleVirtualKeyboardVisibilityChange (_event)
     }
 }
 
-async function requestNativeScreenLock ()
-{
-    document.addEventListener('visibilitychange', async () => {
-        if (document.visibilityState === 'visible')
-        {
-            await navigator.wakeLock.request('screen');
-        }
-    });
-
-    await navigator.wakeLock.request('screen');
-}
-
-function loadScript (src)
-{
-    return new Promise((resolve, reject) => {
-        const script = document.createElement('script');
-        script.onload = resolve;
-        script.onerror = reject;
-        script.crossOrigin = 'anonymous';
-        script.src = src;
-        document.head.appendChild(script);
-    });
-}
-
-async function requestPolyfilledScreenLock ()
-{
-    const looksMobile = window.matchMedia?.('(hover: none)').matches;
-
-    if (looksMobile)
-    {
-        await loadScript('https://unpkg.com/nosleep.js');
-
-        const noSleep = new window.NoSleep();
-        // NoSleep plays an invisible video to keep the screen awake. In
-        // most browsers playing video requires user interaction, so
-        // first .enable() will most probably fail.
-        try
-        {
-            await noSleep.enable();
-        }
-        catch (error)
-        {
-            globalMessageElement.textContent = 'Tap to keep the screen awake';
-            globalMessageElement.hidden = false;
-
-            document.addEventListener('click', async function requestScreenLockOnce () {
-                document.removeEventListener('click', requestScreenLockOnce);
-                await noSleep.enable();
-                globalMessageElement.dataset.outgoing = 'true';
-                globalMessageElement.addEventListener('transitionend', () => {
-                    globalMessageElement.hidden = true;
-                });
-            });
-        }
-    }
-}
-
-async function requestScreenLock ()
-{
-    if ('wakeLock' in navigator)
-    {
-        requestNativeScreenLock();
-    }
-    else
-    {
-        requestPolyfilledScreenLock();
-    }
-}
-
 async function main ()
 {
-    await requestScreenLock();
-
     if (window.location.hostname !== 'localhost' && !window.location.hostname.endsWith('.loca.lt'))
     {
         navigator.serviceWorker.register('./serviceWorker.js');

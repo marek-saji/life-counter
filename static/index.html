@@ -12,6 +12,9 @@
     <link rel=stylesheet type=text/css href=stylesheet/index.css />
     <link rel="license" href="LICENSE.md">
 
+    <script type=module src=./components/screen-lock/index.mjs></script>
+    <link rel=stylesheet href=./components/screen-lock/index.css />
+
     <script type=module src=./components/life/index.mjs></script>
     <link rel=stylesheet href=./components/life/index.css />
 
@@ -25,33 +28,32 @@
 </head>
 <body>
 
-    <main class="t-App">
-        <div class="t-App__message" data-component=global-message hidden aria-life="polite">
-        </div>
+    <lc-screen-lock>
+        <main class="t-App">
+            <header class="t-App__toolbox">
+                <button type="reset" class="a-Action" aria-label="Start new game">
+                    ↻
+                </button>
+            </header>
 
-        <header class="t-App__toolbox">
-            <button type="reset" class="a-Action" aria-label="Start new game">
-                ↻
-            </button>
-        </header>
+            <lc-player
+                id=player-2
+                player-name="Opponent"
+                player-colour="red"
+                panel-rotation="180"
+                class="t-App__panel"
+            >
+            </lc-player>
 
-        <lc-player
-            id=player-2
-            player-name="Opponent"
-            player-colour="red"
-            panel-rotation="180"
-            class="t-App__panel"
-        >
-        </lc-player>
-
-        <lc-player
-            id=player-1
-            player-name="Me"
-            player-colour="black"
-            class="t-App__panel"
-        >
-        </lc-player>
-    </main>
+            <lc-player
+                id=player-1
+                player-name="Me"
+                player-colour="black"
+                class="t-App__panel"
+            >
+            </lc-player>
+        </main>
+    </lc-screen-lock>
 
 </body>
 </html>
