@@ -120,11 +120,8 @@ async function handleChange (event)
     const playerId = playerElement.id;
     const data = players.get(playerId);
 
-    const settings = Object.fromEntries(
-        new FormData(event.target.form),
-    );
+    Object.assign(data, event.detail);
 
-    Object.assign(data, settings);
     await saveCurrentGame();
     await restoreCurrentGame();
 }
@@ -247,7 +244,7 @@ async function main ()
         };
         players.set(playerElement.id, data);
 
-        playerElement.addEventListener('change', handleChange);
+        playerElement.addEventListener('lc-change', handleChange);
 
         const nameInput = playerElement.querySelector('[name=name]');
         nameInput.addEventListener('focus', handlePossibleVirtualKeyboardVisibilityChange);

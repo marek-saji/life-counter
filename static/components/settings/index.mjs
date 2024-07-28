@@ -166,6 +166,22 @@ class LcSettings extends HTMLElement
         }
     }
 
+    /**
+     * @param {Event} event
+     */
+    handleChangeEvent (event)
+    {
+        const data = Object.fromEntries(
+            new FormData(event.target.form).entries(),
+        );
+        const customEvent = new CustomEvent('lc-change', {
+            target: this,
+            bubbles: true,
+            detail: data,
+        });
+        this.dispatchEvent(customEvent);
+    }
+
     toggle ()
     {
         const dialog = this.querySelector('dialog');

@@ -64,7 +64,7 @@ class LcPlayer extends HTMLElement
                     <span class="o-Player__name" data-component=name></span>
                 </h2>
 
-                <lc-life value="20"></lc-life>
+                <lc-life></lc-life>
 
                 <lc-settings player-id=${this.id}></lc-settings>
             </div>
@@ -75,6 +75,9 @@ class LcPlayer extends HTMLElement
             // eslint-disable-next-line no-self-assign
             this[prop] = this[prop];
         });
+
+        const lifeElement = this.querySelector('lc-life');
+        lifeElement.addEventListener('change', this);
     }
 
     attributeChangedCallback (attr, oldValue, newValue)
@@ -84,6 +87,21 @@ class LcPlayer extends HTMLElement
             const prop = LcPlayer.#attributeToPropMap[attr];
             this[prop] = newValue;
         }
+    }
+
+    handleEvent (event)
+    {
+        if (event.target.matches('lc-life'))
+        {
+            this.handleLifeChangeEvent(event);
+        }
+    }
+
+    handleLifeChangeEvent (event)
+    {
+        const lifeElement = event.target;
+
+        this.dataset.dead = lifeElement.value <= 0 ? 'true' : 'false';
     }
 
     get playerName ()

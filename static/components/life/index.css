@@ -7,7 +7,7 @@ lc-life
     overflow: hidden;
 }
 
-lc-life form
+.m-Life
 {
     display: flex;
     flex-direction: column-reverse;
@@ -69,6 +69,7 @@ lc-life form
 
 .m-Life__value
 {
+    display: inline-block;
     flex: 0 1 auto;
     width: var(--value-width);
     color: inherit;
@@ -87,7 +88,7 @@ lc-life form
 
 @container lc-player (width > 10rem)
 {
-    lc-life form
+    .m-Life
     {
         flex-direction: row;
     }
@@ -105,7 +106,7 @@ lc-life form
     }
 }
 
-lc-life output
+[lc-life-message]
 {
     --offset-y: 0em;
 

@@ -31,19 +31,17 @@ class LcLife extends HTMLElement
     {
         this.innerHTML = html`
             <output
-                hidden
+                lc-life-message
                 class="o-Player__message"
-                data-component=message
+                hidden
                 aria-life="polite"
             ></output>
 
-            <form>
-                <input
+            <section class="m-Life">
+                <output
+                    lc-life-value
                     class="m-Life__value"
-                    type="number"
-                    name="life"
-                    value="${this.value}"
-                />
+                >${this.value}</output>
                 <button
                     class="m-Life__button m-Life__button--decrease"
                     type="button"
@@ -60,12 +58,10 @@ class LcLife extends HTMLElement
                 >
                     <span class="m-Life__button-icon">+</span>
                 </button>
-            </form>
+            </section>
         `;
 
         this.addEventListener('click', this);
-        this.addEventListener('submit', this);
-        this.addEventListener('change', this);
     }
 
     attributeChangedCallback (name, oldValue, newValue)
@@ -89,8 +85,6 @@ class LcLife extends HTMLElement
         {
             ({
                 click: this.handleClickEvent,
-                change: this.handleChangeEvent,
-                submit: this.handleSubmitEvent,
             })[event.type]?.call(this, event);
         }
     }
@@ -108,23 +102,6 @@ class LcLife extends HTMLElement
     }
 
     /**
-     * @param {Event} event
-     */
-    handleChangeEvent (event)
-    {
-        this.value = event.target.value;
-    }
-
-    /**
-     * @param {SubmitEvent} event
-     */
-    // eslint-disable-next-line class-methods-use-this
-    handleSubmitEvent (event)
-    {
-        event.preventDefault();
-    }
-
-    /**
      * @param {string|number} value
      */
     set value (newValue)
@@ -138,20 +115,27 @@ class LcLife extends HTMLElement
         const oldValue = this.#value;
         this.#value = numberValue;
 
-        const input = this.querySelector('input[type=number]');
-        if (input)
+        const valueElement = this.querySelector('[lc-life-value]');
+        if (valueElement)
         {
-            if (input.value !== String(this.#value))
+            if (valueElement.textContent !== String(this.#value))
             {
-                input.value = this.#value;
+                valueElement.textContent = this.#value;
                 this.#change += this.#value - oldValue;
             }
         }
 
-        const event = new Event('change', {
-            target: this,
-        });
-        this.dispatchEvent(event);
+        if (oldValue !== this.#value)
+        {
+            const event = new CustomEvent('lc-change', {
+                target: this,
+                bubbles: true,
+                detail: {
+                    life: this.#value,
+                },
+            });
+            this.dispatchEvent(event);
+        }
     }
 
     get value ()
@@ -166,7 +150,7 @@ class LcLife extends HTMLElement
     {
         this.#changeValue = value;
 
-        const change = this.querySelector('output');
+        const change = this.querySelector('[lc-life-message]');
         if (value === 0)
         {
             change.hidden = true;
