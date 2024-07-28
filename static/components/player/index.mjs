@@ -78,6 +78,11 @@ class LcPlayer extends HTMLElement
 
         const lifeElement = this.querySelector('lc-life');
         lifeElement.addEventListener('change', this);
+
+        // TODO Remove once https://bugs.chromium.org/p/chromium/issues/detail?id=704070 is fixed
+        this.addEventListener('focus', this);
+        this.addEventListener('blur', this);
+        window.addEventListener('resize', this);
     }
 
     attributeChangedCallback (attr, oldValue, newValue)
@@ -91,17 +96,59 @@ class LcPlayer extends HTMLElement
 
     handleEvent (event)
     {
-        if (event.target.matches('lc-life'))
+        if (event.target !== this)
         {
-            this.handleLifeChangeEvent(event);
+            ({
+                change: this.handleClickEvent,
+                // TODO Remove once https://bugs.chromium.org/p/chromium/issues/detail?id=704070 is fixed
+                focus:
+                    this.handlePossibleVirtualKeyboardVisibilityChange,
+                blur:
+                    this.handlePossibleVirtualKeyboardVisibilityChange,
+                resize:
+                    this.handlePossibleVirtualKeyboardVisibilityChange,
+            })[event.type]?.call(this, event);
         }
     }
 
     handleLifeChangeEvent (event)
     {
-        const lifeElement = event.target;
+        const { target } = event;
 
-        this.dataset.dead = lifeElement.value <= 0 ? 'true' : 'false';
+        if (target.matches('lc-life'))
+        {
+            this.dataset.dead = target.value <= 0 ? 'true' : 'false';
+        }
+    }
+
+    // TODO Remove once https://bugs.chromium.org/p/chromium/issues/detail?id=704070 is fixed
+    handlePossibleVirtualKeyboardVisibilityChange ()
+    {
+        if (
+            !matchMedia?.('(display-mode: fullscreen)').matches
+            || !navigator?.userAgentData.brands.some((b) => b.brand === 'Chromium')
+            || navigator?.userAgentData?.mobile !== true
+        )
+        {
+            return;
+        }
+
+        let workaroundNeeded = false;
+
+        const { activeElement } = this.ownerDocument;
+        if (activeElement?.tagName === 'INPUT' && activeElement?.type === 'text')
+        {
+            workaroundNeeded = true;
+        }
+
+        if (workaroundNeeded)
+        {
+            this.ownerDocument.documentElement.setAttribute('data-need-chromium-704070-workaround', 'true');
+        }
+        else
+        {
+            this.ownerDocument.documentElement.removeAttribute('data-need-chromium-704070-workaround');
+        }
     }
 
     get playerName ()

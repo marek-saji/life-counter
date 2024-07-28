@@ -124,36 +124,6 @@ async function handleChange (event)
     await restoreCurrentGame();
 }
 
-// TODO Remove once https://bugs.chromium.org/p/chromium/issues/detail?id=704070 is fixed
-function handlePossibleVirtualKeyboardVisibilityChange (_event)
-{
-    if (
-        !window.matchMedia?.('(display-mode: fullscreen)').matches
-        || !window?.navigator?.userAgentData.brands.some((b) => b.brand === 'Chromium')
-        || window?.navigator?.userAgentData?.mobile !== true
-    )
-    {
-        return;
-    }
-
-    let workaroundNeeded = false;
-
-    const { activeElement } = document;
-    if (activeElement?.tagName === 'INPUT' && activeElement?.type === 'text')
-    {
-        workaroundNeeded = true;
-    }
-
-    if (workaroundNeeded)
-    {
-        document.documentElement.setAttribute('data-need-chromium-704070-workaround', 'true');
-    }
-    else
-    {
-        document.documentElement.removeAttribute('data-need-chromium-704070-workaround');
-    }
-}
-
 async function main ()
 {
     if (window.location.hostname !== 'localhost' && !window.location.hostname.endsWith('.loca.lt'))
@@ -172,11 +142,6 @@ async function main ()
         players.set(playerElement.id, data);
 
         playerElement.addEventListener('lc-change', handleChange);
-
-        const nameInput = playerElement.querySelector('[name=name]');
-        nameInput.addEventListener('focus', handlePossibleVirtualKeyboardVisibilityChange);
-        nameInput.addEventListener('blur', handlePossibleVirtualKeyboardVisibilityChange);
-        window.addEventListener('resize', handlePossibleVirtualKeyboardVisibilityChange);
     });
 
     restoreCurrentGame();
